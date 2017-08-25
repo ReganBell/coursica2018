@@ -14,7 +14,7 @@ export const parseResult = result => dictGetter(result, {
   description: field('description'),
   overall: field('topReport/responses/overall', overall => dictGetter(overall, {
     score: field('score', displayScore),
-    underlineColor: field('percentiles/similar', colorForPercentile)
+    underlineColor: field('percentiles/size', colorForPercentile)
   })),
   workload: field('topReport/responses/workload', workload => dictGetter(workload, {
     score: field('score', displayScore)
