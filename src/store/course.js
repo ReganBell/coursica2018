@@ -31,7 +31,6 @@ export default {
     fetchComments: ({ state, commit }) => {
       commit('setCommentsReportId', state.selectedReportId)
       Fetch.comments(state.selectedReportId || '100', (comments, err) => {
-        console.log('Received', Object.keys(comments || {}).length, 'comments')
         commit('setComments', comments)
       })
     },
@@ -62,7 +61,6 @@ export default {
       let {offering, selectedReportId} = state
       comments = comments || {}
       state.comments = comments
-      console.log('commentInfo', offering, selectedReportId, comments)
       const commentInfo = Parse.commentInfo(offering, selectedReportId, comments)
       Vue.set(state, 'commentInfo', commentInfo)
       persist({ commentInfo })

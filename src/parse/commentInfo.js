@@ -3,7 +3,9 @@ import { options, dictGetter, field, selectedOption } from './common'
 const spanClass = (string, _class) => '<span class=' + _class + '>' + string + '</span>'
 
 const mapComments = (comments, filter) => {
-  if (filter === 'All') return comments
+  if (!filter || filter === 'All') {
+    return comments
+  }
   const caseInsensitive = filter === 'TF' ? '' : 'ig'
   const regex = new RegExp('\\w*' + filter + '\\w*', caseInsensitive)
   const sentenceRegex = new RegExp('[^.]*' + filter + '[^.$]*.', caseInsensitive)
