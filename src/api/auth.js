@@ -45,8 +45,24 @@ export default {
       .catch(error => { console.error('Error updating planner info', error, { gradYear, concentration, track, secondary }, user) })
   },
   addToShoopingList (courseId, user = Firebase.auth().currentUser) {
-    if (courseId.offerings[0].option) {
-      Firebase.database().ref('/shopping-list/v1/' + user.uid).push(courseId.offerings[0].option)
+    if (courseId) {
+      Firebase.database().ref('/shopping-list/v1/' + user.uid).push(courseId)
+    }
+  },
+  isInShoppingList (courseId, user = Firebase.auth().currentUser) {
+    if (courseId) {
+      return Firebase.database().ref('/shopping-list/v1/' + user.uid).once('value').then(function (snapshot) {
+        return snapshot.forEach(function (childSnapshot) {
+          var shoppingListCourseId = childSnapshot.val()
+          if (courseId === shoppingListCourseId) {
+            return true
+          }
+        })
+      })
+    } else {
+      return new Promise(function (resolve, reject) {
+        resolve(false)
+      })
     }
   },
   sendEmailVerification (user = Firebase.auth().currentUser) {
