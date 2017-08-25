@@ -1,6 +1,6 @@
 import { dictGetter, field, groupAndNumber, displayScore, termYear, sessionDaysAndTimes, textColorForPercentile, colorForPercentile } from './common'
 
-const result = result => dictGetter(result, {
+export const parseResult = result => dictGetter(result, {
   objectID: field('objectID'),
   title: field('title'),
   groupAndNumber: field('', groupAndNumber),
@@ -21,4 +21,4 @@ const result = result => dictGetter(result, {
   })),
   size: field('topReport/size')
 })
-export default hits => hits.map(result)
+export default hits => hits.map(parseResult)

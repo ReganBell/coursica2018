@@ -7,6 +7,13 @@ import { load, persist } from './persist'
 export default {
   state: {
     text: '',
+    filters: {
+      term: null,
+      level: null,
+      type: null,
+      genEd: null,
+      time: null
+    },
     results: load('searchResults') || [],
     offerings: load('offerings') || {}
   },
@@ -26,12 +33,13 @@ export default {
         console.log(results)
         context.commit('setSearchResults', results)
       }
-      Search.search(context.state.text, {}).then(updateResults).catch(err => {
+      const filters = 'term:Fall'
+      Search.search(context.state.text, { filters }).then(updateResults).catch(err => {
         console.error(err)
         updateResults(FakeData.fakeSearchResults)
       })
     },
-    selectOffering: ({ commit, state }, objectID) => { commit('setOffering', state.offerings[objectID]) }
+    selectOffering: ({ commit, state }, offering) => { commit('setOffering', offering) }
   },
   mutations: {
     setSearchText: (state, searchText) => { state.text = searchText },

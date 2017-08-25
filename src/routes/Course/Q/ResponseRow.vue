@@ -14,7 +14,9 @@ export default {
   name: 'response-row',
   props: ['response'],
   methods: {
-    clickedResponse (event) { this.$store.commit('setCompareArea', this.response.label.toLowerCase()) }
+    clickedResponse (event) { 
+      this.$store.commit('setCompareArea', this.response.label.toLowerCase())
+    }
   }
 }
 

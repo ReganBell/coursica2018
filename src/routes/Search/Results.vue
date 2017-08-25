@@ -26,8 +26,6 @@
 
 <script>
 
-['title', 'groupAndNumber', 'termYear', 'meets', 'prof', 'description', 'overall', 'workload', 'size', 'objectID']
-
 import result from './Result.vue'
 
 export default {

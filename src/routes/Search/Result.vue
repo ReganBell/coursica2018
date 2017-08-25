@@ -1,36 +1,43 @@
 <template>
 <div class="search-result" @click="selectCourse">
   <div class="course-info">
-    <div class="title">{{ title }}</div>
-    <div class="info-subtitle">
-      <span class="group-and-number">{{ groupAndNumber }}</span>
-      <span class="term">{{ termYear }}</span>
-      <span v-if="meets" class="meets">{{ meets }}</span>
-      <span v-if="prof" class="prof">{{ prof.name }}</span>
-      <span v-if="prof" class="profScore" v-bind:style="{ color: prof.color }">{{ prof.score }}</span>
+    <div class="title">{{ result.title }}</div>
+     <div class="info-subtitle">
+      <span class="group-and-number">{{ result.groupAndNumber }}</span>
+      <span class="term">{{ result.termYear }}</span>
+      <span v-if="result.meets" class="meets">{{ result.meets }}</span>
+      <span v-if="result.prof" class="prof">{{ result.prof.name }}</span>
+      <span v-if="result.prof" class="profScore" v-bind:style="{ color: result.prof.color }">{{ result.prof.score }}</span>
     </div>
-    <div class="description" v-html="description"></div>
+    <div class="description" v-html="result.description"></div> 
   </div>
-  <span v-if="overall" class="q-column score">{{ overall.score }}
-    <span class="underline" :style="{ 'background-color': overall.underlineColor }"></span>
+   <span v-if="result.overall" class="q-column score">{{ result.overall.score }}
+    <span class="underline" :style="{ 'background-color': result.overall.underlineColor }"></span>
   </span>
   <span v-else class="q-column score" style="color: lightGray">N/A</span>
-  <span v-if="workload" class="q-column workload">{{ workload.score }}</span>
+  <span v-if="result.workload" class="q-column workload">{{ result.workload.score }}</span>
   <span v-else class="q-column workload" style="color: lightGray">N/A</span>
-  <span v-if="size" class="q-column size">{{ size }}</span>
-  <span v-else class="q-column size" style="color: lightGray">N/A</span>
+  <span v-if="result.size" class="q-column size">{{ result.size }}</span>
+  <span v-else class="q-column size" style="color: lightGray">N/A</span> 
 </div>
 </template>
 
 <script>
 
+import { parseResult } from '../../parse/searchResults'
+
 export default {
   name: 'search-result',
-  props: ['title', 'groupAndNumber', 'termYear', 'meets', 'prof', 'description', 'overall', 'workload', 'size', 'objectID'],
+  computed: {
+    result: function() {
+      return parseResult(this.rawResult)
+    }
+  },
+  props: ['rawResult'],//['title', 'groupAndNumber', 'termYear', 'meets', 'prof', 'description', 'overall', 'workload', 'size', 'objectID'],
   methods: {
     selectCourse: function () {
-      this.$store.dispatch('selectOffering', this.objectID)
-      this.$router.push({ path: '/course/' + this.objectID })
+      this.$store.dispatch('selectOffering', this.rawResult)
+      this.$router.push({ path: '/course/' + this.rawResult.objectID })
     }
   }
 }
@@ -47,9 +54,7 @@ export default {
 .search-result
   width search-results-width
   border-bottom solid 1px #EEE
-  
-  padding-left rbw-underline-search-left
-  
+    
   transition background-color 100ms ease-in-out
   
   display: flex

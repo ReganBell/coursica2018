@@ -7,6 +7,9 @@ import store from './store'
 import Auth from './api/auth'
 import VueKeepScrollPosition from 'vue-keep-scroll-position'
 import { sync } from 'vuex-router-sync'
+import InstantSearch from 'vue-instantsearch'
+
+Vue.use(InstantSearch)
 
 sync(store, router)
 

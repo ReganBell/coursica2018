@@ -14,7 +14,7 @@
       @keyup.enter="submitSearch">
     </input>
     <div v-if="!!results" class='filter-container'>
-      <searchFilter v-for="filter in filters" :prompt="filter" :key="filter"></searchFilter>
+      <searchFilter v-for="filter in filters" :filter="filter" :key="filter.prompt"></searchFilter>
     </div>
     <div v-if="!results" class="search-instructions">Press Enter to search!</div>
   </header>
@@ -29,7 +29,26 @@ import searchFilter from './Filter.vue'
 const colors = ['red', 'orangered', 'orange', 'yellow', 'green', 'cyan']
 const colorClasses = colors.map(c => ({[c]: true}))
 
-const filters = ['Any term', 'Any level', 'Any type', 'Any Gen Ed status', 'Any meeting time']
+const filters = [
+  {
+    placeholder: 'Any term',
+    values: ["Fall '17", "Spring '18", "Fall '18", "Spring '19", "Fall '19", "Spring '20"]
+  },
+  {
+    placeholder: 'Any level',
+    values: ['Undergrad only', 'Grad only', 'Both']
+  },
+  {
+    placeholder: 'Any type',
+    values: []
+  },
+  {
+    placeholder: 'Any Gen Ed status'
+  },
+  {
+    placeholder: 'Any meeting time'
+  }
+]
 
 export default {
   data: function () {
@@ -71,7 +90,7 @@ export default {
   width 100%
   height search-header-height
   
-  overflow hidden
+  overflow visible
   z-index 2
   
   background-color white
@@ -129,7 +148,8 @@ export default {
   .filter-container
     display flex
     justify-content space-between
-    align-items center
+    align-items flex-start
+    overflow visible
   
   .search-instructions
     line-height 42px
