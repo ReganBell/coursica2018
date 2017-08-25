@@ -23,7 +23,8 @@ const filters = [
   { name: 'format', display: 'Format' },
   { name: 'level', display: 'Level' },
   { name: 'sessions.days', display: 'Meets On' },
-  { name: 'year', display: 'Year' }
+  { name: 'year', display: 'Year' },
+  { name: 'departments', display: 'Department' }
 ]
 
 import result from './Result'

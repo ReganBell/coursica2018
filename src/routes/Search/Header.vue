@@ -4,7 +4,7 @@
     <span class="rbw-underline">
       <span v-for="color in colors" class="rbw-bar" :class="color"></span>
     </span>
-    <searchBox id="search" />
+    <searchBox id="search"/>
     <!-- <input id='search' 
       v-focus="focused" 
       @focus="focused = true" 
@@ -30,27 +30,6 @@ import searchBox from './SearchBox'
 
 const colors = ['red', 'orangered', 'orange', 'yellow', 'green', 'cyan']
 const colorClasses = colors.map(c => ({[c]: true}))
-
-const filters = [
-  {
-    placeholder: 'Any term',
-    values: ["Fall '17", "Spring '18", "Fall '18", "Spring '19", "Fall '19", "Spring '20"]
-  },
-  {
-    placeholder: 'Any level',
-    values: ['Undergrad only', 'Grad only', 'Both']
-  },
-  {
-    placeholder: 'Any type',
-    values: []
-  },
-  {
-    placeholder: 'Any Gen Ed status'
-  },
-  {
-    placeholder: 'Any meeting time'
-  }
-]
 
 export default {
   data: function () {
@@ -114,33 +93,6 @@ export default {
     font-weight 600
 
     cursor default
-    
-  .ais-input
-    margin-top 10px
-    margin-left 44px
-    width 639px
-    height 44px
-    
-    color #888
-    font-weight 400
-    font-size 18px
-    font-family Proxima Nova
-    text-align left
-
-    background-color #F3F3F3
-    border-radius 8px
-    padding-left 20px
-    border-style none
-    outline none
-
-  ::-ms-clear 
-    display none
-
-  ::-webkit-search-decoration,
-  ::-webkit-search-cancel-button,
-  ::-webkit-search-results-button,
-  ::-webkit-search-results-decoration 
-    display none
   
   #search:focus
     transform scale(1.01)

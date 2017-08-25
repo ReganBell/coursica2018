@@ -4,7 +4,7 @@
       <homeHeader :signedIn="signedIn"></homeHeader>
       <router-link to="/" class="logo" :class="{movedUp: signedIn}">Coursica</router-link>
       <transition name="search-slide">
-        <input v-if="signedIn" id='search' placeholder="Search for courses" @input="searchChanged"></input>
+        <input v-if="signedIn" id='search' placeholder="Search for courses" @keyup.enter="searchChanged"></input>
       </transition>
       <span class="rbw-underline">
         <span v-for="color in colors" class="rbw-bar" :class="color"></span>
@@ -47,11 +47,11 @@ export default {
   }),
   methods: {
     searchChanged (event) {
-      const letter = event.target.value
+      const query = event.target.value
       this.$router.push({
-        path: '/homeSearch',
+        path: '/search',
         query: {
-          q: letter
+          q: query
         }})
     },
     toggleSignUpMode () {

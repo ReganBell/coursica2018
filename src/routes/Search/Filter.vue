@@ -1,7 +1,10 @@
 <template>
   <div class="filter">
     <div class="header">{{ display }}</div>
-    <ais-refinement-list :attribute-name="name" :class-names="classNames"></ais-refinement-list>  
+    <ais-refinement-list 
+      :attribute-name="name" 
+      :class-names="classNames"
+      :limit="100"></ais-refinement-list>  
   </div>
 </template>
 

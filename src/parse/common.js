@@ -59,7 +59,7 @@ export const displayScore = score => parseFloat(score).toFixed(1)
 export const scoreCircle = compareArea => response => dictGetter(response, {
   score: field('score', displayScore),
   percentile: field('percentile'),
-  color: field('percentiles/' + (compareArea || 'similar'), colorForPercentile)
+  color: field('percentiles/' + (compareArea || 'size'), colorForPercentile)
 })
 
 export const filterMap = (arr, fn) => arr.reduce((acc, val) => fn(val) ? acc.concat([fn(val)]) : acc, [])

@@ -15,9 +15,10 @@ export default new Router({
       component: HomeContainer
     },
     {
-      path: '/homeSearch',
+      path: '/search',
       name: 'Search',
-      component: SearchContainer
+      component: SearchContainer,
+      props: route => ({ query: route.query.q })
     },
     {
       path: '/course/:objectID',
