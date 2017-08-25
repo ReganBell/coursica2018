@@ -2,11 +2,11 @@
   <div class="bottom-half">
     <div class="shopping-list-container">
       <div class="shopping-list-title">My Shopping List</div>
-      <template v-if="courses.length > 0">
+      <template v-if="courses && courses.length > 0">
         <table-header></table-header>
         <result v-for="course in courses" :key="course.objectID" :rawResult="course"></result>
       </template>
-      <div v-else>Your shopping list is empty. Try adding some courses.</div>
+      <div v-else-if="courses">Your shopping list is empty. Try adding some courses.</div>
     </div>
   </div>
 </template>
@@ -22,12 +22,12 @@ export default {
   components: { result, tableHeader },
   data: function() {
     return {
-      courses: []
+      courses: undefined
     }
   },
   mounted: function () {
     Auth.getShoppingList().then(courseIds => {
-      return Search.getShoppingListCourses(courseIds)
+      return courseIds.length > 0 ? Search.getShoppingListCourses(courseIds) : []
     }).then( courses => {
         this.courses = courses
     })
