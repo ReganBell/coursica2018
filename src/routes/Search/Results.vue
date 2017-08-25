@@ -2,12 +2,7 @@
   <!-- <keep-alive> -->
     <div id="content">
       <div id="results-container">
-        <div id="header">
-          <span class="course">Course</span>
-          <span class="q-overall">Q</span>
-          <span class="q-workload">Workload</span>
-          <span class="size">Size</span>
-        </div>
+        <table-header></table-header>
         <ais-results id="results">
           <template scope="{ result }">
             <result :rawResult="result" :key="result.objectID"></result>
@@ -33,12 +28,13 @@ const filters = [
 
 import result from './Result'
 import searchFilter from './Filter'
+import tableHeader from './TableHeader'
 
 export default {
   name: 'search-results',
   props: ['results'],
   data: () => ({ filters }),
-  components: { result, searchFilter }
+  components: { result, searchFilter, tableHeader }
 }
 
 </script>
@@ -56,31 +52,9 @@ export default {
     display flex
     flex-direction column
 
-    #header
-      height search-results-header-height
-      width search-results-width
-      border-bottom solid 1px #EEE
-            
-      display flex
-      align-items center
-
-      span
-        text-align center
-        color #959595
-        font-size 18px
-    
-      .course
-        width 70%
-
-      .q-overall, .q-workload, .size
-        width 10%
-
   #filters
     display flex
     flex-direction column
-
     width 400px
-
-    // .header
       
 </style>
