@@ -1,13 +1,15 @@
 <template>
-  <div id="boxes">
-    <box
-      v-for="(box, index) in boxes"
-      v-bind:color="box.color"
-      v-bind:title="box.title"
-      v-bind:subtitle="box.subtitle"
-      v-bind:size="box.size"
-      v-bind:key="index">
-    </box>
+  <div class="bottom-half">
+    <div id="boxes">
+      <box
+        v-for="(box, index) in boxes"
+        v-bind:color="box.color"
+        v-bind:title="box.title"
+        v-bind:subtitle="box.subtitle"
+        v-bind:size="box.size"
+        v-bind:key="index">
+      </box>
+    </div>
   </div>
 </template>
 

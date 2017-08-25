@@ -11,22 +11,17 @@
       </span>
     </div>
     <transition name="bottom-half-fade" mode="out-in">
-      <div class="bottom-half">
-        <!-- <component :is="bottomHalfView" :results="shoppingListCourses"></component> -->
-        <result v-for="course in shoppingListCourses" :key="course.objectID" :rawResult="course"></result>
-      </div>
+        <component :is="bottomHalfView"></component>
     </transition>
   </div>
 </template>
 
 <script>
 
-import result from '../Search/Result.vue'
-import Auth from '../../api/auth.js'
-import Search from '../../api/search.js'
 import signInUp from './SignInUp.vue'
 import homeHeader from './Header.vue'
 import boxContainer from './BoxContainer.vue'
+import shoppingList from './ShoppingList.vue'
 import { mapState } from 'vuex'
 
 const colors = ['red', 'orangered', 'orange', 'yellow', 'green', 'cyan']
@@ -34,19 +29,13 @@ const colorClasses = colors.map(c => ({[c]: true}))
 
 export default {
   name: 'home-view',
-  components: { signInUp, homeHeader, boxContainer, result },
+  components: { signInUp, homeHeader, boxContainer, shoppingList },
   data: function() {
     return {
       shoppingListCourses: []
     }
   },
   mounted: function () {
-    Auth.getShoppingList().then(courseIds => {
-      return Search.getShoppingListCourses(courseIds)
-    }).then( courses => {
-        this.shoppingListCourses = courses
-    })
-
     if (this.$route.query.mode === 'verifyEmail' && this.$route.query.oobCode) {
       this.$store.dispatch('verifyEmail', this.$route.query.oobCode)
     }
@@ -54,7 +43,7 @@ export default {
   computed: mapState({
     colors: _ => colorClasses,
     signedIn: state => !!state.user || state.signingOut,
-    bottomHalfView: function () { return this.signedIn ? 'results' : 'signInUp' }
+    bottomHalfView: function () { return this.signedIn ? 'shoppingList' : 'signInUp' }
   }),
   methods: {
     searchChanged (event) {
