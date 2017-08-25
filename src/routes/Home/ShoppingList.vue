@@ -41,6 +41,8 @@ export default {
 <style lang="stylus">
 
 @import '../../styles/base.styl'
+.bottom-half
+  overflow auto
 
 .shopping-list-container
   width search-results-width
