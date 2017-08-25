@@ -50,6 +50,7 @@ export default {
 
 .search-result:hover
   background-color #FAFAFA
+  cursor pointer
 
 .search-result
   width search-results-width
@@ -67,9 +68,7 @@ export default {
     .title
       padding-top 16px
       width 90%
-      
-      cursor pointer
-      
+            
       color coursica-blue
       font-weight 600
       font-size 16px
@@ -92,7 +91,6 @@ export default {
       	
       .prof
         color coursica-blue
-        cursor pointer
         padding-right 4px  
     
     .description
