@@ -20,7 +20,7 @@ export default {
   },
   listenForUser (signedIn, signedOut) {
     auth.onAuthStateChanged(function (user) {
-      if (user && user.emailVerified) {
+      if (user /* && user.emailVerified */) {
         signedIn(user)
       } else {
         signedOut()
@@ -43,6 +43,43 @@ export default {
     const infoRef = Firebase.database().ref('/planners/v1/' + user.uid + '/info')
     infoRef.update({ gradYear, concentration, track, secondary })
       .catch(error => { console.error('Error updating planner info', error, { gradYear, concentration, track, secondary }, user) })
+  },
+  addToShoopingList (courseId, user = Firebase.auth().currentUser) {
+    if (courseId) {
+      Firebase.database().ref('/shopping-list/v1/' + user.uid).push(courseId)
+    }
+  },
+  removeFromShoppingList (courseId, user = Firebase.auth().currentUser) {
+    if (courseId) {
+      return Firebase.database().ref('/shopping-list/v1/' + user.uid).once('value').then(function (snapshot) {
+        return snapshot.forEach(function (childSnapshot) {
+          var shoppingListCourseId = childSnapshot.val()
+          if (courseId === shoppingListCourseId) {
+            childSnapshot.ref.remove()
+          }
+        })
+      })
+    } else {
+      return new Promise(function (resolve, reject) {
+        resolve()
+      })
+    }
+  },
+  isInShoppingList (courseId, user = Firebase.auth().currentUser) {
+    if (courseId) {
+      return Firebase.database().ref('/shopping-list/v1/' + user.uid).once('value').then(function (snapshot) {
+        return snapshot.forEach(function (childSnapshot) {
+          var shoppingListCourseId = childSnapshot.val()
+          if (courseId === shoppingListCourseId) {
+            return true
+          }
+        })
+      })
+    } else {
+      return new Promise(function (resolve, reject) {
+        resolve(false)
+      })
+    }
   },
   sendEmailVerification (user = Firebase.auth().currentUser) {
     user.sendEmailVerification().catch(error => { console.error('Error sending email verification', error, user) })
