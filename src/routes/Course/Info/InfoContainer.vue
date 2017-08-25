@@ -72,9 +72,11 @@ export default {
   methods: {
     addToShopping: function () {
       Auth.addToShoopingList(this.info.offerings[0].option)
+      data.inShoppingList = true
     },
     removeFromShopping: function () {
-      console.log('TODO')
+      Auth.removeFromShoppingList(this.info.offerings[0].option)
+      data.inShoppingList = false
     }
   },
   mounted: function () {

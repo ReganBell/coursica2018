@@ -49,6 +49,22 @@ export default {
       Firebase.database().ref('/shopping-list/v1/' + user.uid).push(courseId)
     }
   },
+  removeFromShoppingList (courseId, user = Firebase.auth().currentUser) {
+    if (courseId) {
+      return Firebase.database().ref('/shopping-list/v1/' + user.uid).once('value').then(function (snapshot) {
+        return snapshot.forEach(function (childSnapshot) {
+          var shoppingListCourseId = childSnapshot.val()
+          if (courseId === shoppingListCourseId) {
+            childSnapshot.ref.remove()
+          }
+        })
+      })
+    } else {
+      return new Promise(function (resolve, reject) {
+        resolve()
+      })
+    }
+  },
   isInShoppingList (courseId, user = Firebase.auth().currentUser) {
     if (courseId) {
       return Firebase.database().ref('/shopping-list/v1/' + user.uid).once('value').then(function (snapshot) {
