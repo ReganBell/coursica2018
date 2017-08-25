@@ -1,10 +1,11 @@
 <template>
-  <header class="search-header">
+  <header id="search-header">
     <router-link to="/" class="logo">Coursica</router-link>
     <span class="rbw-underline">
       <span v-for="color in colors" class="rbw-bar" :class="color"></span>
     </span>
-    <input id='search' 
+    <searchBox id="search" />
+    <!-- <input id='search' 
       v-focus="focused" 
       @focus="focused = true" 
       @blur="focused = false
@@ -12,10 +13,10 @@
       :value="searchText"
       @input="searchChanged"
       @keyup.enter="submitSearch">
-    </input>
-    <div v-if="!!results" class='filter-container'>
+    </input> -->
+    <!-- <div v-if="!!results" class='filter-container'>
       <searchFilter v-for="filter in filters" :filter="filter" :key="filter.prompt"></searchFilter>
-    </div>
+    </div> -->
     <div v-if="!results" class="search-instructions">Press Enter to search!</div>
   </header>
 </template>
@@ -25,6 +26,7 @@
 import { mapState } from 'vuex'
 import { mixin as focusMixin } from 'vue-focus'
 import searchFilter from './Filter.vue'
+import searchBox from './SearchBox'
 
 const colors = ['red', 'orangered', 'orange', 'yellow', 'green', 'cyan']
 const colorClasses = colors.map(c => ({[c]: true}))
@@ -57,7 +59,7 @@ export default {
     }
   },
   mixins: [focusMixin],
-  components: { searchFilter },
+  components: { searchFilter, searchBox },
   computed: mapState({
     colors: _ => colorClasses,
     searchText: state => state.search.text,
@@ -82,13 +84,11 @@ export default {
 
 //Main CSS  
 
-.search-header
-  position fixed
-  left 0
-  top 0
-  
+#search-header  
   width 100%
   height search-header-height
+
+  position relative
   
   overflow visible
   z-index 2
@@ -104,8 +104,8 @@ export default {
     height search-header-height
     line-height search-header-height
     vertical-align center
-    left rbw-underline-search-left
-    font-size 48px
+    right rbw-underline-search-left
+    font-size 32px
     text-align center
 
     background-color white
@@ -115,12 +115,11 @@ export default {
 
     cursor default
     
-  #search
-    position absolute
-    top 17px
-    left 294px
+  .ais-input
+    margin-top 10px
+    margin-left 44px
     width 639px
-    height 51px
+    height 44px
     
     color #888
     font-weight 400
@@ -133,6 +132,15 @@ export default {
     padding-left 20px
     border-style none
     outline none
+
+  ::-ms-clear 
+    display none
+
+  ::-webkit-search-decoration,
+  ::-webkit-search-cancel-button,
+  ::-webkit-search-results-button,
+  ::-webkit-search-results-decoration 
+    display none
   
   #search:focus
     transform scale(1.01)
@@ -163,7 +171,7 @@ export default {
     width rbw-underline-search-width
     height 4px
     bottom -1px
-    left rbw-underline-search-left
+    right rbw-underline-search-left
     
     .rbw-bar
       width 14%

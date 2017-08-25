@@ -25,6 +25,7 @@ body
   font-family Proxima Nova
   font-weight 400
   -webkit-font-smoothing antialiased
+  margin 0
 
 ::-webkit-input-placeholder
   color alpha(black, 0.27)

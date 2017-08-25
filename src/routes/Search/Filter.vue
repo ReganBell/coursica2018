@@ -1,77 +1,43 @@
 <template>
-<div class="filter"  @click="handleClick">
-  <div class="selection">
-     {{ filter.placeholder }} 
-    <img src="../../assets/disclosure_triangle.png" class="expand-arrow" :class="{ expanded }"></span>
+  <div class="filter">
+    <div class="header">{{ display }}</div>
+    <ais-refinement-list :attribute-name="name" :class-names="classNames"></ais-refinement-list>  
   </div>
-  <div v-if="expanded" class="list">
-    <filterItem v-for="value in filter.values" :value="value" :key="value"></filterItem>
-  </div>
-</div>
 </template>
 
 <script>
-
-import { mapState } from 'vuex'
-import filterItem from './FilterItem'
-
 export default {
-  props: ['filter'],
-  components: { filterItem },
+  name: 'filter',
   data: () => ({
-    expanded: false
-  }),
-  methods: {
-    handleClick: function (event) {
-      this.$data.expanded = !this.$data.expanded
-    },
-    handleItemClick: function (event) {
-      console.log(event.target.value)
+    classNames: {
+      'ais-refinement-list': 'list',
+      'ais-refinement-list__item': 'item',
+      'ais-refinement-list__label': 'label',
+      'ais-refinement-list__checkbox': 'checkbox',
+      'ais-refinement-list__value': 'value',
+      'ais-refinement-list__count': 'count',
+      'ais-refinement-list__item--active': 'active'
     }
-  }
+  }),
+  props: ['name', 'display']
 }
-
 </script>
 
 <style lang="stylus">
-
-@import '../../styles/base.styl'
-
 .filter
-  font-weight 600
-  color #B9B9B9
-  font-size 14px
-  cursor pointer
-  margin-top 14px
-  padding-left 10px
-  padding-right 10px
-
-  position relative
-  z-index 10
-  display flex
-  flex-direction column
-  overflow visible
-
-  background-color white
-
-  .selection
-    height 100%
-
+  margin 10px
+  .header
+    padding 5px
+    color #959595
   .list
-    margin-top 8px
-    margin-bottom 8px
-
-    .item:hover
-      color #A9A9A9
-
     .item
-      padding-top 5px
-      padding-bottom 5px
-  
-  .expand-arrow
-    padding-left 2px
-
-    width 6px
-    height 5px
-
+      margin-left 10px
+      margin-top 7px
+      .value
+        padding-left 8px
+      .count
+        color #959595
+    .item.active
+      .value
+        font-weight 600
 </style>
