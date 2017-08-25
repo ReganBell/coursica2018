@@ -2,11 +2,13 @@
   <div class="bottom-half">
     <div class="shopping-list-container">
       <div class="shopping-list-title">My Shopping List</div>
-      <template v-if="courses && courses.length > 0">
-        <table-header></table-header>
-        <result v-for="course in courses" :key="course.objectID" :rawResult="course"></result>
+      <template v-if="courses">
+        <template v-if="courses.length > 0">
+          <table-header></table-header>
+          <result v-for="course in courses" :key="course.objectID" :rawResult="course"></result>
+        </template>
+        <div v-else class="shopping-list-subtitle">Your shopping list is empty. Try adding some courses.</div>
       </template>
-      <div v-else-if="courses">Your shopping list is empty. Try adding some courses.</div>
     </div>
   </div>
 </template>
@@ -42,13 +44,20 @@ export default {
 
 .shopping-list-container
   width search-results-width
-  margin: 0 auto;
+  margin 0 auto
 
 .shopping-list-title
-  font-size: 36px;
-  font-weight: bold;
-  padding-top: 50px;
-  padding-bottom: 10px;
-  text-align: center;
+  font-size 36px
+  font-weight bold
+  padding-top 70px
+  padding-bottom 20px
+  text-align center
+
+.shopping-list-subtitle
+  font-size 20px
+  font-weight 500
+  padding-top 20px
+  text-align center
+  color #b9b9b9
 
 </style>
