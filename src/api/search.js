@@ -13,5 +13,15 @@ export default {
         resolve(content.hits)
       })
     })
+  },
+  getShoppingListCourses (courseIds) {
+    return new Promise((resolve, reject) => {
+      index.getObjects(courseIds, (error, content) => {
+        if (error) {
+          reject(error)
+        }
+        resolve(content.results)
+      })
+    })
   }
 }

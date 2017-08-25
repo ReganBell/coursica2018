@@ -81,6 +81,16 @@ export default {
       })
     }
   },
+  getShoppingList (user = Firebase.auth().currentUser) {
+    return Firebase.database().ref('/shopping-list/v1/' + user.uid).once('value').then(function (snapshot) {
+        var shoppingList = []
+        snapshot.forEach(function (childSnapshot) {
+          var shoppingListCourseId = childSnapshot.val()
+          shoppingList.push(shoppingListCourseId)
+        })
+        return shoppingList
+      })
+  },
   sendEmailVerification (user = Firebase.auth().currentUser) {
     user.sendEmailVerification().catch(error => { console.error('Error sending email verification', error, user) })
   },
