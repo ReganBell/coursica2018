@@ -68,8 +68,7 @@ export default {
     handleSliderUpdate (name, newValues) {
       const [from, to] = newValues.map(value => Number(value))
       this.searchStore.stop()
-      this.searchStore.removeNumericRefinement(name, '>')
-      this.searchStore.removeNumericRefinement(name, '<')
+      this.searchStore.clearRefinements(name)
       this.searchStore.addNumericRefinement(name, '>=', from)
       this.searchStore.addNumericRefinement(name, '<=', to)
       this.searchStore.start()
