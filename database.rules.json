@@ -1,10 +1,6 @@
 {
   "rules": {
     ".read": "auth != null",
-    "planners/v1": {
-      "$uid": {
-        ".write": "$uid === auth.uid"
-      }  
-    }
-}
+    ".write": "auth != null"
+  }
 }

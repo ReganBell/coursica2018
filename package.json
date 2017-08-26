@@ -29,6 +29,7 @@
     "vue-focus": "^2.1.0",
     "vue-instantsearch": "^1.0.0",
     "vue-keep-scroll-position": "^0.1.2",
+    "vue-nouislider": "^1.0.1",
     "vue-radial-progress": "^0.2.10",
     "vue-router": "^2.2.0",
     "vuex": "^2.2.1",

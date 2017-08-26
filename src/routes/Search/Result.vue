@@ -36,8 +36,7 @@ export default {
   props: ['rawResult'],//['title', 'groupAndNumber', 'termYear', 'meets', 'prof', 'description', 'overall', 'workload', 'size', 'objectID'],
   methods: {
     selectCourse: function () {
-      this.$store.dispatch('selectOffering', this.rawResult)
-      this.$router.push({ path: '/course/' + this.rawResult.objectID })
+      this.$emit('selectResult', this.rawResult)
     }
   }
 }

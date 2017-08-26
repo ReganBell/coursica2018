@@ -12,6 +12,7 @@ const sizeClass = size => {
 }
 
 export default (report, prof, compareCategory, compareArea) => {
+  console.log('Bars', { report, prof, compareCategory, compareArea })
   const color = get('responses/' + compareArea + '/percentiles/' + compareCategory, {obj: report, fn: colorForPercentile}) || 'lightGray'
   const score = parseFloat(get('responses/' + compareArea + '/score', {obj: report}) || '-1')
   const barsCategory = compareCategory === 'similar' ? 'size' : compareCategory

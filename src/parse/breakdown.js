@@ -7,7 +7,8 @@ const responseRow = (response, label, category) => dictGetter(response, {
   color: field('percentiles/' + category, colorForPercentile)
 })
 const responseRows = category => responses => {
-  const labels = ['Assignments', 'Feedback', 'Materials', 'Recommend', 'Section']
+  // const labels = ['Assignments', 'Feedback', 'Materials', 'Recommend', 'Section']
+  const labels = ['Assignments', 'Materials', 'Recommend', 'Section']
   return filterMap(labels, label => responseRow(responses[label.toLowerCase()], label, category))
 }
 const sizeClass = report => {
@@ -61,6 +62,7 @@ const mapProfs = compareCategory => profs => profs.map(prof => dictGetter(prof, 
 
 const breakdown = (result, reportId, compareArea, compareCategory, prof, bars) => {
   const report = selectedReport(reportId, result)
+  if (!report) return {}
   let dict = dictGetter(report, {
     selectedReportId: field('reportId'),
     overallCircle: field('responses/overall', scoreCircle(compareCategory)),

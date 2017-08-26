@@ -2,22 +2,9 @@
   <header id="search-header">
     <router-link to="/" class="logo">Coursica</router-link>
     <span class="rbw-underline">
-      <span v-for="color in colors" class="rbw-bar" :class="color"></span>
+      <span v-for="color in colors" class="rbw-bar" :class="{ [color]: true }" :key="color"></span>
     </span>
-    <searchBox id="search"/>
-    <!-- <input id='search' 
-      v-focus="focused" 
-      @focus="focused = true" 
-      @blur="focused = false
-      "placeholder="Search for courses" 
-      :value="searchText"
-      @input="searchChanged"
-      @keyup.enter="submitSearch">
-    </input> -->
-    <!-- <div v-if="!!results" class='filter-container'>
-      <searchFilter v-for="filter in filters" :filter="filter" :key="filter.prompt"></searchFilter>
-    </div> -->
-    <div v-if="!results" class="search-instructions">Press Enter to search!</div>
+    <searchBox id="search" :searchStore="searchStore"/>
   </header>
 </template>
 
@@ -29,30 +16,17 @@ import searchFilter from './Filter.vue'
 import searchBox from './SearchBox'
 
 const colors = ['red', 'orangered', 'orange', 'yellow', 'green', 'cyan']
-const colorClasses = colors.map(c => ({[c]: true}))
 
 export default {
-  data: function () {
-    return {
-      focused: true
-    }
-  },
+  props: ['searchStore'],
   mixins: [focusMixin],
   components: { searchFilter, searchBox },
   computed: mapState({
-    colors: _ => colorClasses,
+    colors,
     searchText: state => state.search.text,
     filters: _ => filters,
     results: state => state.search.results
-  }),
-  methods: {
-    searchChanged (e) {
-      this.$store.dispatch('setSearchText', e.target.value)
-    },
-    submitSearch () {
-      this.$store.dispatch('submitSearch')
-    }
-  }
+  })
 }
 
 </script>

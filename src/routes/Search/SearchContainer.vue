@@ -1,9 +1,7 @@
 <template>
-  <ais-index id="container" :search-store="searchStore" :query="query">
-    <searchHeader/>
-    <results />
-    <!-- <searchHeader></searchHeader>
-    <results v-if="results" :results="results"></results> -->
+  <ais-index id="container" :search-store="searchStore">
+    <searchHeader :searchStore="searchStore"/>
+    <results :searchStore="searchStore" @selectResult="handleSelect"/>
   </ais-index>
 </template>
 
@@ -24,27 +22,22 @@ searchStore.indexName = 'offerings'
 export default {
   name: 'search',
   data: () => ({ searchStore }),
-  props: {
-    query: {
-      default: 'computer science',
-    }
-  },
   components: { searchHeader, results, result },
   beforeMount: function () {
-    this.$store.dispatch('setSearchText', this.$route.query.q)
+    searchStore.query = this.$route.query.q
   },
-  watch: {
-    'searchStore.query'(value) {
+  methods: {
+    handleSelect (result) {
+      const q = this.searchStore.query
       this.$router.push({
-        name: 'Search',
-        query: { q: value },
-      });
-    },
+        query: { q }
+      })
+      this.$store.dispatch('selectOffering', result)
+      this.$router.push({ path: '/course/' + result.objectID })
+    }
   },
   computed: mapState({
-    results: state => {
-      return state.search.results
-    }
+    results: state => state.search.results
   })
 }
 

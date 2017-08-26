@@ -1,10 +1,14 @@
 <template>
-  <div class="filter">
-    <div class="header">{{ display }}</div>
-    <ais-refinement-list 
+  <div class="filter" @click="handleClick">
+    <div class="header">
+      <div class="title">{{ display }}</div>
+      <div class="expand">{{ expanded ? 'Hide' : 'Show'}}</div>
+    </div>
+    <ais-refinement-list
+      :style="expanded ? {} : { display: 'none' }"
       :attribute-name="name" 
       :class-names="classNames"
-      :limit="100"></ais-refinement-list>  
+      :limit="100" />
   </div>
 </template>
 
@@ -20,18 +24,31 @@ export default {
       'ais-refinement-list__value': 'value',
       'ais-refinement-list__count': 'count',
       'ais-refinement-list__item--active': 'active'
-    }
+    },
+    expanded: false
   }),
-  props: ['name', 'display']
+  props: ['name', 'display'],
+  methods: {
+    handleClick () {
+      this.expanded = !this.expanded
+    }
+  }
 }
 </script>
 
 <style lang="stylus">
+.filter:hover
+  background-color #FCFCFF
 .filter
-  margin 10px
+  padding 10px
   .header
     padding 5px
     color #959595
+    display flex
+    justify-content space-between
+
+    .expand
+      color #CCC
   .list
     .item
       margin-left 10px
