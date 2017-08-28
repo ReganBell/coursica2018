@@ -1,6 +1,6 @@
 import Fetch from '@/api/fetch'
 import { persist, load } from './persist'
-import Parse from '@/parse'
+// import Parse from '@/parse'
 import Vue from 'vue'
 import { selectedReport, get } from '@/parse/common'
 
@@ -50,12 +50,13 @@ export default {
       state.commentsReportId = reportId
     },
     setOffering (state, offering) {
-      const offeringInfo = Parse.offeringInfo(offering)
       state.offering = offering
-      if (offering.topReport) state.selectedReportId = offering.topReport.reportId
-      updateBreakdown(state)
-      state.offeringInfo = offeringInfo
-      persist({ offering, offeringInfo })
+      // const offeringInfo = Parse.offeringInfo(offering)
+      // state.offering = offering
+      // if (offering.topReport) state.selectedReportId = offering.topReport.reportId
+      // updateBreakdown(state)
+      // state.offeringInfo = offeringInfo
+      persist({ offering })
     },
     setComments (state, comments, reportId) {
       let {offering, selectedReportId} = state

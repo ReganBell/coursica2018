@@ -5,9 +5,9 @@
       <span v-for="color in colors" class="rbw-bar" :class="color"></span>
     </span>
     <div class="links">
-      <router-link to="/planner">Planner</router-link>
+      <!-- <router-link to="/planner">Planner</router-link>
       <router-link to="/calendar">Calendar</router-link>
-      <router-link to="/requirements">Requirements</router-link>
+      <router-link to="/requirements">Requirements</router-link> -->
       <span class="user-info">
         <div id="full-name">{{ fullName }}</div>
         <a id="sign-out" v-on:click="signOut">{{ signOutText }}</a>

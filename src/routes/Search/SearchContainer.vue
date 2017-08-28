@@ -9,7 +9,6 @@
 
 import searchHeader from './Header'
 import results from './Results'
-import result from './Result'
 import { mapState } from 'vuex'
 import { createFromAlgoliaCredentials } from 'vue-instantsearch';
 
@@ -22,7 +21,7 @@ searchStore.indexName = 'offerings'
 export default {
   name: 'search',
   data: () => ({ searchStore }),
-  components: { searchHeader, results, result },
+  components: { searchHeader, results },
   beforeMount: function () {
     searchStore.query = this.$route.query.q
   },

@@ -18,7 +18,7 @@
 import result from '../Search/Result.vue'
 import tableHeader from '../Search/TableHeader.vue'
 import Auth from '../../api/auth.js'
-import Search from '../../api/search.js'
+import Search from '../../api/search'
 
 export default {
   components: { result, tableHeader },

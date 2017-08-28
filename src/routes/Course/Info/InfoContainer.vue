@@ -8,44 +8,44 @@
         <div @click="addToShopping" class="shopping-button" v-else-if="firebaseLoaded">Add to shopping list</div>
       </div>
       <div class="circle-column">
-        <score-circle v-if="info.scoreCircle"
-          :score="info.scoreCircle.score" 
-          :textColor="info.scoreCircle.textColor"
+         <score-circle v-if="scoreCircle"
+          :score="scoreCircle.score" 
           :diameter="130" 
-          :color="info.scoreCircle.color" 
+          :color="scoreCircle.color" 
           :scoreSize="'40px'" 
           :labelSize="'12px'" 
           :label="'Predicted Q Overall'" 
           id="info-circle">
-        </score-circle>
+        </score-circle> 
       </div>
     </div>
     <div class="offering-rows">
       <select class="hidden">
-        <option v-for="option in info.offerings" 
-          :value="option.option" 
-          :key="option.option" 
-          :selected="option.option == info.objectID">{{ option.text }}</option>
+         <option v-for="sibling in siblings" 
+          :value="sibling.objectID" 
+          :key="sibling.objectID" 
+          :selected="sibling.objectID == info.objectID">{{ sibling.text }}
+        </option> 
       </select>
       <div class="term-year">
         <img src="../../../assets/select_arrow_blue.png" class="select-arrow"></img>
         {{ info.termYear }}
       </div>
-      <div class="meeting-time">{{ info.meetingTime }}</div>
-      <template v-for="prof in info.profs">
-        <span class="prof">
+      <div class="meeting-time">{{ sessions }}</div>
+      <template v-for="prof in profs">
+        <span class="prof" :key="prof.name">
           <router-link :to="'a'" class="name">{{ prof.name }}</router-link>
           <span class="score" :style="{color: prof.color}">{{ prof.score }}</span>
         </span>
-      </template>
+      </template> 
     </div>
-    <div class="description" v-html="info.description"></div>
+    <div class="description" v-html="offering.description"></div>
     <div class="info-block">
-      <template v-for="bullet in info.bullets">
+       <template v-for="bullet in bullets">
         <div class="bullet">
           <img src="../../../assets/bullet.png" class="point"></img><div class="info" v-html="bullet"></div>
         </div>
-      </template>
+      </template> 
       <div class="more-info-btn">More details...</div>
     </div>
   </div>
@@ -56,6 +56,8 @@
 import ScoreCircle from '../ScoreCircle.vue'
 import Selector from '../../../components/Selector.vue'
 import Auth from '@/api/auth'
+import { basicInfo, profsInfo, overallInfo, workloadInfo, sizeInfo, timeInfo, sessionInfo, scoreCircle, siblingInfo } from '@/parse/offering'
+import { bulletInfo } from '@/parse/bullets'
 
 var data = {
   firebaseLoaded: false,
@@ -64,10 +66,33 @@ var data = {
 
 export default {
   name: 'course-info',
-  props: ['info'],
+  props: ['offering'],
   components: { ScoreCircle, Selector },
   data: function () {
     return data
+  },
+  computed: {
+    info () {
+      return basicInfo(this.offering)
+    },
+    time () {
+      return timeInfo(this.offering.sessions)
+    },
+    sessions () {
+      return sessionInfo(this.offering.sessions)
+    },
+    scoreCircle () {
+      return scoreCircle(this.offering)
+    },
+    siblings () {
+      return siblingInfo(this.offering)
+    },
+    profs () {
+      return profsInfo(this.offering.profs)
+    },
+    bullets () {
+      return bulletInfo(this.offering)
+    }
   },
   methods: {
     addToShopping: function () {
@@ -80,14 +105,14 @@ export default {
     }
   },
   mounted: function () {
-    Auth.isInShoppingList(this.info.offerings[0].option).then(function (inShoppingList) {
-      data.firebaseLoaded = true
-      data.inShoppingList = inShoppingList
-    })
+    // Auth.isInShoppingList(this.info.offerings[0].option).then(function (inShoppingList) {
+    //   data.firebaseLoaded = true
+    //   data.inShoppingList = inShoppingList
+    // })
 
-    if (this.objectID) {
-      this.$store.commit('persistOffering', this.objectID)
-    }
+    // if (this.objectID) {
+    //   this.$store.commit('persistOffering', this.objectID)
+    // }
   }
 }
 

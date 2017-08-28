@@ -3,9 +3,9 @@
     <nav-header></nav-header>
     <div id="course-scroll-container">
       <div class="course-flex-container">
-        <infoContainer :info="info"></infoContainer>
-        <breakdown v-if="breakdown" :info="breakdown"></breakdown>
-        <comments v-if="commentInfo" :info="commentInfo"></comments>
+        <infoContainer :offering="offering"></infoContainer>
+        <!-- <breakdown v-if="breakdown" :info="breakdown"></breakdown>
+        <comments v-if="commentInfo" :info="commentInfo"></comments> -->
       </div>
     </div>
   </div>
@@ -22,7 +22,10 @@ export default {
   name: 'course',
   components: { NavHeader, infoContainer, breakdown, comments },
   computed: {
-    info () { return this.$store.state.course.offeringInfo },
+    offering () { 
+      console.log('offering', this.$store.state.course.offering)
+      return this.$store.state.course.offering
+    },
     breakdown () { return this.$store.state.course.breakdown },
     commentInfo () { return this.$store.state.course.commentInfo }
   }

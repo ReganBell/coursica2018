@@ -20,11 +20,10 @@ const colors = ['red', 'orangered', 'orange', 'yellow', 'green', 'cyan']
 export default {
   props: ['searchStore'],
   mixins: [focusMixin],
+  data: () => ({ colors }),
   components: { searchFilter, searchBox },
   computed: mapState({
-    colors,
     searchText: state => state.search.text,
-    filters: _ => filters,
     results: state => state.search.results
   })
 }
@@ -66,7 +65,7 @@ export default {
     text-decoration none
     font-weight 600
 
-    cursor default
+    cursor pointer
   
   #search:focus
     transform scale(1.01)

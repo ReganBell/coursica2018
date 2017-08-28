@@ -1,4 +1,5 @@
 import { get, getter, dictGetter, field, displayScore, groupAndNumber, scoreCircle, filterMap, termYear, sessionDaysAndTimes, textColorForPercentile } from './common'
+import { ServerOffering } from '../model'
 
 const prof = prof => dictGetter(prof, {
   name: field('displayName'),
@@ -7,11 +8,19 @@ const prof = prof => dictGetter(prof, {
   percentile: field('percentile')
 })
 const otherText = other => termYear(other) + ' ' + get('sessions', {obj: other, fn: sessionDaysAndTimes}) || 'TBA' + ' ' + filterMap(other.profs, prof).map(p => p.name + ' ' + p.score).join('; ')
-const otherOffering = other => dictGetter(other, {
-  option: field('objectID'),
-  text: field('', otherText)
-})
-const otherOfferings = result => filterMap(result.otherOfferings ? [result].concat(result.otherOfferings) : [result], otherOffering)
+const otherOffering = other => {
+  console.log('other', other)
+  const getter = dictGetter(other, {
+    option: field('objectID'),
+    text: field('', otherText)
+  })
+  return getter
+}
+const otherOfferings = result => {
+  const others = filterMap(result.otherOfferings ? [result].concat(result.otherOfferings) : [result], otherOffering)
+  console.log(others)
+  return others
+}
 
 const meets = session => session.days.join(', ') + ' from ' + session.start + '-' + session.end
 const sessionString = sessions => sessions.map(s => meets(s)).join('; ')

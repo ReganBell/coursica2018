@@ -6,7 +6,7 @@
         <ais-results id="results">
           <template scope="{ result }">
             <result 
-              :rawResult="result"
+              :result="result"
               :key="result.objectID"
               @selectResult="handleSelect">
             </result>
@@ -51,7 +51,7 @@ const sliders = [
 ]
 console.log('sliders', sliders)
 
-import result from './Result'
+import result from './Result.vue'
 import searchFilter from './Filter'
 import searchSlider from './Slider'
 import tableHeader from './TableHeader'

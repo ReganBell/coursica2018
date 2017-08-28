@@ -1,42 +1,55 @@
 <template>
 <div class="search-result" @click="selectCourse">
   <div class="course-info">
-    <div class="title">{{ result.title }}</div>
+    <div class="title">{{ info.title }}</div>
      <div class="info-subtitle">
-      <span class="group-and-number">{{ result.groupAndNumber }}</span>
-      <span class="term">{{ result.termYear }}</span>
-      <span v-if="result.meets" class="meets">{{ result.meets }}</span>
-      <span v-if="result.prof" class="prof">{{ result.prof.name }}</span>
-      <span v-if="result.prof" class="profScore" v-bind:style="{ color: result.prof.color }">{{ result.prof.score }}</span>
+      <span class="group-and-number">{{ info.groupAndNumber }}</span>
+      <span class="term">{{ info.termYear }}</span>
+      <span v-if="info.meets" class="meets">{{ info.meets }}</span>
+      <span v-if="time" class="time">{{ time }}</span>
+      <span v-if="prof" class="prof">{{ prof.name }}</span>
+      <span v-if="prof" class="profScore" v-bind:style="{ color: prof.color }">{{ prof.score }}</span>
     </div>
-    <div class="description" v-html="result.description"></div> 
+    <div class="description" v-html="result.description" />
   </div>
-   <span v-if="result.overall" class="q-column score">{{ result.overall.score }}
-    <span class="underline" :style="{ 'background-color': result.overall.underlineColor }"></span>
+  <span v-if="overall" class="q-column score" :class="overall.class">{{ overall.score }}
+    <span v-if="overall.color" class="underline" :style="{ 'background-color': overall.color }" />
   </span>
-  <span v-else class="q-column score" style="color: lightGray">N/A</span>
-  <span v-if="result.workload" class="q-column workload">{{ result.workload.score }}</span>
-  <span v-else class="q-column workload" style="color: lightGray">N/A</span>
-  <span v-if="result.size" class="q-column size">{{ result.size }}</span>
-  <span v-else class="q-column size" style="color: lightGray">N/A</span> 
+  <span v-else class="q-column score empty">N/A</span>
+  <span class="q-column workload" :class="workload.class" style="workload.style">{{ workload.score }}</span>
+  <span class="q-column size" :class="size.class">{{ size.size }}</span>  
 </div>
 </template>
 
 <script>
 
-import { parseResult } from '../../parse/searchResults'
+import { basicInfo, profInfo, overallInfo, workloadInfo, sizeInfo, timeInfo } from '../../parse/offering'
 
 export default {
-  name: 'search-result',
-  computed: {
-    result: function() {
-      return parseResult(this.rawResult)
+  props: ['result'],
+  methods: {
+    selectCourse () {
+      this.$emit('selectResult', this.result)
     }
   },
-  props: ['rawResult'],//['title', 'groupAndNumber', 'termYear', 'meets', 'prof', 'description', 'overall', 'workload', 'size', 'objectID'],
-  methods: {
-    selectCourse: function () {
-      this.$emit('selectResult', this.rawResult)
+  computed: {
+    info () {
+      return basicInfo(this.result)
+    },
+    prof () {
+      return profInfo(this.result.profs)
+    },
+    overall () {
+      return overallInfo(this.result)
+    },
+    workload () {
+      return workloadInfo(this.result)
+    },
+    size () {
+      return sizeInfo(this.result)
+    },
+    time () {
+      return timeInfo(this.result.sessions)
     }
   }
 }
@@ -85,7 +98,7 @@ export default {
       .group-and-number, .term
       	color #B9B9B9
       	
-      .meets
+      .meets, .time
       	color black
       	
       .prof
@@ -104,7 +117,9 @@ export default {
       display -webkit-box
       -webkit-line-clamp 2
       -webkit-box-orient vertical
-      
+
+  .q-column.empty
+    color #DDD    
   .q-column
     width 10%
     font-size 18px
