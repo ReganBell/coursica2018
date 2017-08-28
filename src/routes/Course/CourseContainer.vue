@@ -4,7 +4,7 @@
     <div id="course-scroll-container">
       <div class="course-flex-container">
         <info v-if="offering" :offering="offering" />
-        <breakdown v-if="report" :report="report" />
+        <breakdown v-if="report" :offering="offering" :report="report" />
         <div class="empty-breakdown" v-else>No Q data available.</div>
         <!-- <comments v-if="commentInfo" :info="commentInfo"></comments> -->
       </div>

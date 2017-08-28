@@ -19,13 +19,13 @@
         <responseRow v-for="response in responseList" :response="response" :category="category" :key="response.label" />
       </div>
     </div>
-    <!-- <div class="right-column">
+     <div class="right-column">
        <div class="title">Q Breakdown</div>
-      <selector :selectedOption="info.selectedOption" :options="info.options" :align="'right'" :handler="reportChanged"></selector>
-      <div id="faculty-column">
+      <selector :selectedOption="`${report.term} ${report.year}`" :options="options" :align="'right'" :handler="reportChanged"></selector>
+      <!-- <div id="faculty-column">
         <faculty-row v-for="prof in info.profs" :prof="prof" :key="prof.matchName"></faculty-row>
-      </div> 
-    </div> -->
+      </div>  -->
+    </div> 
     <!-- <div id="percentile-graph">
       <div v-for="bar in info.bars" class="bar" :style="bar"></div>
     </div>
@@ -57,11 +57,11 @@ import responseRow from './ResponseRow.vue'
 import facultyRow from './FacultyRow.vue'
 import selector from '@/components/Selector.vue'
 import { scoreCircle } from '@/parse/common'
-import { parseResponses } from '@/parse/report'
+import { parseResponses, parseOptions } from '@/parse/report'
 
 export default {
   components: { ScoreCircle, responseRow, facultyRow, selector },
-  props: ['report'],
+  props: ['report', 'offering'],
   computed: {
     category () {
       return this.$route.query.category || 'size'
@@ -90,6 +90,9 @@ export default {
       } catch (_) {
         return null
       }
+    },
+    options () {
+      return parseOptions(this.offering, this.report)
     }
   },
   // created () {

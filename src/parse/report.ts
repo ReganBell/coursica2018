@@ -13,3 +13,11 @@ export const parseResponse = (tuple: [string, Coursica.Response], category: stri
   }
   return { label, score }
 }
+
+export const parseOptions = (offering: Coursica.Offering, selectedReport: Coursica.Report) => {
+  const reports = [offering.topReport, ...(offering.reports || [])]
+  return reports.map(report => ({
+    text: `${report.term} ${report.year.replace('20', "'")}`, 
+    option: report.reportId
+  }))
+}
