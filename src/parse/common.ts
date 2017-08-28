@@ -8,9 +8,25 @@ const percentileColor = (percentile, arr) => '#' + arr[percentileIndex(percentil
 export const colorForPercentile = percentile => percentileColor(percentile, percentileColors)
 export const textColorForPercentile = percentile => percentileColor(percentile, textPercentileColors)
 
+export const capitalize = string => string.charAt(0).toUpperCase() + string.slice(1)
+
 export const parseTime = (timeNum: number) => {
   let hoursNum = Math.floor(timeNum)
   const minutesNum = Math.round(60 * (timeNum - hoursNum))
   hoursNum = hoursNum > 12 ? hoursNum - 12 : hoursNum
   return minutesNum > 1 ? [hoursNum, minutesNum].map(x => x.toFixed(0)).join(':') : hoursNum.toFixed(0)
+}
+
+export const scoreCircle = (response: Coursica.Response) => {
+  let score, percentile, color = null
+  try {
+    score = parseScore(response.score)
+    percentile = response.percentiles.size
+    color = colorForPercentile(percentile)
+  } catch (error) {}
+  if (percentile) {
+    return { score, percentile, color }
+  } else {
+    return { score }
+  }
 }

@@ -102,6 +102,7 @@ declare namespace Coursica {
     title: string
     evals: number
     size: number
+    reportId: string
     responses?: {
       feedback?: Response
       section?: Response

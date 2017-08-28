@@ -1,18 +1,34 @@
 <template>
   <div class="response-row" @click="clickedResponse">
-    <span class="label">{{ response.label }}</span>
+    <span class="label">{{ label }}</span>
     <span class="score-container">
-      <span class="score">{{ response.score }}</span>
-      <span class="color-line" :style="{'background-color': response.color}"></span>
+      <span class="score">{{ score }}</span>
+      <span class="color-line" :style="{'background-color': color}"></span>
     </span>
   </div>
 </template>
 
 <script>
 
+import { parseResponse } from '@/parse/report'
+
 export default {
   name: 'response-row',
-  props: ['response'],
+  props: ['response', 'category'],
+  computed: {
+    parsed () {
+      return parseResponse(this.response, this.category)
+    },
+    label () {
+      return this.parsed.label
+    },
+    score () {
+      return this.parsed.score
+    },
+    color () {
+      return this.parsed.color
+    }
+  },
   methods: {
     clickedResponse (event) { 
       this.$store.commit('setCompareArea', this.response.label.toLowerCase())

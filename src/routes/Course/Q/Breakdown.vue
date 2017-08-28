@@ -2,29 +2,31 @@
   <div class="q-breakdown">
     <div class="left-column">
       <div id="circle-column">
-        <score-circle id="overall-circle" 
-          :score="info.overallCircle.score"
-          :color="info.overallCircle.color">
-        </score-circle>
-        <score-circle id="workload-circle" 
-          :score="info.workloadCircle.score" 
+        <ScoreCircle v-if="overallCircle"
+          id="overall-circle" 
+          :score="overallCircle.score"
+          :label="'Overall'"
+          :color="overallCircle.color">
+        </ScoreCircle>
+        <ScoreCircle v-if="workloadCircle"
+          id="workload-circle" 
+          :score="workloadCircle.score" 
           :label="'Workload'"
-          :color="info.workloadCircle.color">
-        </score-circle>
+          :color="workloadCircle.color">
+        </ScoreCircle>
       </div>
       <div id="response-column">
-        <response-row v-for="response in info.responseRows" :response="response" :key="response.label"></response-row>
+        <responseRow v-for="response in responseList" :response="response" :category="category" :key="response.label" />
       </div>
     </div>
-    <div class="right-column">
-      <div class="title">Q Breakdown</div>
+    <!-- <div class="right-column">
+       <div class="title">Q Breakdown</div>
       <selector :selectedOption="info.selectedOption" :options="info.options" :align="'right'" :handler="reportChanged"></selector>
       <div id="faculty-column">
         <faculty-row v-for="prof in info.profs" :prof="prof" :key="prof.matchName"></faculty-row>
-      </div>
-    </div>
-    <div id="percentile-graph">
-<!--       <div v-for="bar in info.bars" class="bar" :style="bar">{{ bar.score + ' count: ' + bar.count }}</div> -->
+      </div> 
+    </div> -->
+    <!-- <div id="percentile-graph">
       <div v-for="bar in info.bars" class="bar" :style="bar"></div>
     </div>
     <div v-if="info.compare" id="percentile-label">
@@ -44,21 +46,52 @@
         {{ info.compare.selectedOption }} 
         <img src="../../../assets/select_arrow_blue.png" class="select-arrow"></img>
       </div>
-    </div>
+    </div> -->
   </div>
 </template>
 
 <script>
 
 import ScoreCircle from '../ScoreCircle.vue'
-import ResponseRow from './ResponseRow.vue'
-import FacultyRow from './FacultyRow.vue'
-import Selector from '@/components/Selector.vue'
+import responseRow from './ResponseRow.vue'
+import facultyRow from './FacultyRow.vue'
+import selector from '@/components/Selector.vue'
+import { scoreCircle } from '@/parse/common'
+import { parseResponses } from '@/parse/report'
 
 export default {
-  name: 'q-breakdown',
-  components: { ScoreCircle, ResponseRow, FacultyRow, Selector },
-  props: ['info'],
+  components: { ScoreCircle, responseRow, facultyRow, selector },
+  props: ['report'],
+  computed: {
+    category () {
+      return this.$route.query.category || 'size'
+    },
+    area () {
+      return this.$route.query.area || 'overall'
+    },
+    responses () {
+      return this.report.responses
+    },
+    responseList () {
+      const responses = this.responses || {}
+      const filtered = Object.keys(responses).filter(name => name !== 'overall' && name !== 'workload')
+      return filtered.map(name => [name, responses[name]])
+    },
+    overallCircle () {
+      try {
+        return scoreCircle(this.responses.overall)
+      } catch (_) {
+        return null
+      }
+    },
+    workloadCircle () {
+      try {
+        return scoreCircle(this.responses.workload)
+      } catch (_) {
+        return null
+      }
+    }
+  },
   // created () {
   //   this.fetchData()
   // },
