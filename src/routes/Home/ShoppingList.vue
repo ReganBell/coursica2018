@@ -5,7 +5,7 @@
       <template v-if="courses">
         <template v-if="courses.length > 0">
           <table-header></table-header>
-          <result v-for="course in courses" :key="course.objectID" :rawResult="course"></result>
+          <result v-for="course in courses" :result="course" @selectResult="handleSelect"></result>
         </template>
         <div v-else class="shopping-list-subtitle">Your shopping list is empty. Try adding some courses.</div>
       </template>
@@ -25,6 +25,12 @@ export default {
   data: function() {
     return {
       courses: undefined
+    }
+  },
+  methods: {
+    handleSelect (result) {
+      this.$store.dispatch('selectOffering', result)
+      this.$router.push({ path: '/course/' + result.objectID })
     }
   },
   mounted: function () {
@@ -49,7 +55,7 @@ export default {
   margin 0 auto
 
 .shopping-list-title
-  font-size 36px
+  font-size 30px
   font-weight bold
   padding-top 70px
   padding-bottom 20px

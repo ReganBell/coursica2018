@@ -61,7 +61,7 @@ import { bulletInfo } from '@/parse/bullets'
 
 var data = {
   firebaseLoaded: false,
-  inShoppingList: true // for now, default to showing "add" button before firebase data loads
+  inShoppingList: true
 }
 
 export default {
@@ -96,19 +96,19 @@ export default {
   },
   methods: {
     addToShopping: function () {
-      Auth.addToShoopingList(this.info.offerings[0].option)
+      Auth.addToShoopingList(this.offering.objectID)
       data.inShoppingList = true
     },
     removeFromShopping: function () {
-      Auth.removeFromShoppingList(this.info.offerings[0].option)
+      Auth.removeFromShoppingList(this.offering.objectID)
       data.inShoppingList = false
     }
   },
   mounted: function () {
-    // Auth.isInShoppingList(this.info.offerings[0].option).then(function (inShoppingList) {
-    //   data.firebaseLoaded = true
-    //   data.inShoppingList = inShoppingList
-    // })
+    Auth.isInShoppingList(this.offering.objectID).then(function (inShoppingList) {
+      data.firebaseLoaded = true
+      data.inShoppingList = inShoppingList
+    })
 
     // if (this.objectID) {
     //   this.$store.commit('persistOffering', this.objectID)
