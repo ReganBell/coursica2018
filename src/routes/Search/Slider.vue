@@ -1,11 +1,10 @@
 <template>
-  <div class="filter" @click="handleClick">
+  <div class="filter">
     <div class="header">
       <div class="title">{{ display }}</div>
-      <div class="expand">{{ expanded ? 'Hide' : 'Show'}}</div>
     </div>
-    <div class="container" :style="expanded ? {} : { display: 'none' }">
-      <div @click.stop>
+    <div class="container">
+      <div>
         <div class="slider" :id="id" />
       </div>
     </div>
@@ -19,7 +18,7 @@ export default {
   name: 'filter',
   data: () => ({
     slider: null,
-    expanded: false,
+    expanded: true,
     tempValues: [1, 5]
   }),
   props: ['name', 'display', 'values', 'range'],
@@ -69,13 +68,14 @@ export default {
   .container
     display flex
     justify-content center
-    margin-top 20px
+    margin-top 30px
     margin-bottom 20px
     .slider
       width 200px
       .noUi-connect
         background-color #1E91FA
         border none
+        box-shadow none
       // .noUi-horizontal
       //   height 14px
       // .noUi-handle:after, .noUi-handle:before
