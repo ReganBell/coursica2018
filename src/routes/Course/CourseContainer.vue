@@ -3,9 +3,10 @@
     <nav-header></nav-header>
     <div id="course-scroll-container">
       <div class="course-flex-container">
-        <infoContainer :offering="offering"></infoContainer>
-        <!-- <breakdown v-if="breakdown" :info="breakdown"></breakdown>
-        <comments v-if="commentInfo" :info="commentInfo"></comments> -->
+        <info v-if="offering" :offering="offering" />
+        <breakdown v-if="report" :offering="offering" :report="report" />
+        <div class="empty-breakdown" v-else>No Q data available.</div>
+        <!-- <comments v-if="commentInfo" :info="commentInfo"></comments> -->
       </div>
     </div>
   </div>
@@ -14,19 +15,22 @@
 <script>
 
 import NavHeader from '@/components/NavHeader.vue'
-import infoContainer from './Info/InfoContainer.vue'
+import info from './Info/Info.vue'
 import breakdown from './Q/Breakdown.vue'
 import comments from './Q/Comments.vue'
 
 export default {
   name: 'course',
-  components: { NavHeader, infoContainer, breakdown, comments },
+  components: { NavHeader, info, breakdown, comments },
   computed: {
     offering () { 
-      console.log('offering', this.$store.state.course.offering)
-      return this.$store.state.course.offering
+      console.log('Selected offering:', this.$store.getters.selectedOffering)
+      return this.$store.getters.selectedOffering
     },
-    breakdown () { return this.$store.state.course.breakdown },
+    report () { 
+      console.log('Selected report:', this.$store.getters.selectedReport)
+      return this.$store.getters.selectedReport
+    },
     commentInfo () { return this.$store.state.course.commentInfo }
   }
 }
@@ -52,5 +56,11 @@ export default {
     align-items center
     justify-content flex-start
     flex-direction column
+
+    .empty-breakdown
+      margin-top 50px
+      height 350px
+      line-height 350px
+      color #AAA
 
 </style>

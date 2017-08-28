@@ -56,7 +56,7 @@
 import ScoreCircle from '../ScoreCircle.vue'
 import Selector from '../../../components/Selector.vue'
 import Auth from '@/api/auth'
-import { basicInfo, profsInfo, overallInfo, workloadInfo, sizeInfo, timeInfo, sessionInfo, scoreCircle, siblingInfo } from '@/parse/offering'
+import { basicInfo, profsInfo, overallInfo, workloadInfo, sizeInfo, timeInfo, sessionInfo, overallCircle, siblingInfo } from '@/parse/offering'
 import { bulletInfo } from '@/parse/bullets'
 
 var data = {
@@ -82,7 +82,7 @@ export default {
       return sessionInfo(this.offering.sessions)
     },
     scoreCircle () {
-      return scoreCircle(this.offering)
+      return overallCircle(this.offering)
     },
     siblings () {
       return siblingInfo(this.offering)

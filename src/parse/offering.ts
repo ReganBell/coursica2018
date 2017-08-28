@@ -1,4 +1,4 @@
-import { parseScore, parseTime, colorForPercentile, textColorForPercentile } from './common'
+import { parseScore, parseTime, colorForPercentile, textColorForPercentile, scoreCircle } from './common'
 
 export const basicInfo = (rawOffering: Coursica.Offering) => {
   const { objectID, title, group, number, termYear } = rawOffering
@@ -27,17 +27,11 @@ export const siblingInfo = (offering: Coursica.Offering) => {
   return offerings.map(siblingSelectOption)
 }
 
-export const scoreCircle = (rawOffering: Coursica.Offering) => {
-  let score, percentile, color = null
+export const overallCircle = (offering: Coursica.Offering) => {
   try {
-    score = parseScore(rawOffering.topReport.responses.overall.score)
-    percentile = rawOffering.topReport.responses.overall.percentiles.size
-    color = colorForPercentile(percentile)
-  } catch (error) {}
-  if (percentile) {
-    return { score, percentile, color }
-  } else {
-    return { score }
+    return scoreCircle(offering.topReport.responses.overall)
+  } catch (error) {
+    return null
   }
 }
 
@@ -86,8 +80,6 @@ export const sessionInfo = (sessions: Coursica.Session[]) => {
   if (!sessions) return null
   return sessions.map(sessionString).join(' and ')
 }
-
-
 
 export const overallInfo = (rawOffering: Coursica.Offering, key: string) => {
   try {
