@@ -1,5 +1,5 @@
 <template>
-  <div class="score-circle-container" :style="containerStyle">
+  <div @click="clicked" class="score-circle-container" :style="containerStyle">
     <div class="score-circle-inner" :style="innerCircleStyle">
       <div class="score" :style="{'font-size': scoreSize, 'color': textColor}">{{ score }}</div>
       <div class="label" :style="{'font-size': labelSize}">{{ label }}</div>
@@ -140,6 +140,9 @@ export default {
     }
   },
   methods: {
+    clicked() {
+      this.$emit('click')
+    },
     getStopPointsOfCircle (steps) {
       const points = []
       for (let i = 0; i < steps; i++) {

@@ -31,7 +31,7 @@ export default {
   },
   methods: {
     clickedResponse (event) { 
-      this.$store.commit('setCompareArea', this.response.label.toLowerCase())
+      this.$store.commit('setCompareArea', this.parsed.label.toLowerCase())
     }
   }
 }

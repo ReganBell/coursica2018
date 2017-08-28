@@ -1,5 +1,6 @@
 import distParams from '../../static/commonDistributions.json'
-import { get, colorForPercentile } from './common'
+
+const colorForPercentile = percentile => percentileColor(percentile, percentileColors)
 
 const sizeClass = size => {
   if (size >= 200) return '200+'
@@ -11,12 +12,9 @@ const sizeClass = size => {
   return '1-5'
 }
 
-export default (report, prof, compareCategory, compareArea) => {
-  console.log('Bars', { report, prof, compareCategory, compareArea })
-  const color = get('responses/' + compareArea + '/percentiles/' + compareCategory, {obj: report, fn: colorForPercentile}) || 'lightGray'
-  const score = parseFloat(get('responses/' + compareArea + '/score', {obj: report}) || '-1')
+export default (compareArea, compareCategory, color, score, size) => {
   const barsCategory = compareCategory === 'similar' ? 'size' : compareCategory
-  let {a, b, loc, scale} = distParams[compareArea][barsCategory === 'size' ? sizeClass(report.size) : barsCategory]
+  let {a, b, loc, scale} = distParams[compareArea][barsCategory === 'size' ? sizeClass(size) : barsCategory]
   a = parseFloat(a)
   b = parseFloat(b)
   loc = parseFloat(loc)
@@ -25,7 +23,7 @@ export default (report, prof, compareCategory, compareArea) => {
   const standardNormalPDF = x => Math.exp(-0.5 * (x * x)) / Math.sqrt(2 * Math.PI)
   const johnsonSUPDF = (x, a, b) => b / Math.sqrt(x * x + 1) * standardNormalPDF(a + b * Math.log(x + Math.sqrt(x * x + 1)))
   const johnson = (x, a, b, loc, scale) => (1 / scale) * johnsonSUPDF((x - loc) / scale, a, b)
-  const [fifth, ninetyFifth] = compareArea === 'workload' ? [1.0, 5.0] : [2.56, 5.0]
+  const [fifth, ninetyFifth] = compareArea === 'workload' ? [1.5, 10] : [2.56, 5.0]
   const steps = 60.0
   const stepSize = (ninetyFifth - fifth) / steps
   let ys = []
@@ -35,6 +33,7 @@ export default (report, prof, compareCategory, compareArea) => {
     if (score > x && score < x + stepSize) colorIndex = i
     ys[i] = johnson(x, a, b, loc, scale)
   }
+
   const tallest = Math.max(Math.max.apply(null, ys), 1)
   const heights = ys.map(y => 100.0 * y / tallest)
   const hashCode = str => parseFloat(str.split('').reduce((prevHash, currVal) => ((prevHash << 5) - prevHash) + currVal.charCodeAt(0), 0))

@@ -4,12 +4,14 @@
       <div id="circle-column">
         <ScoreCircle v-if="overallCircle"
           id="overall-circle" 
+          @click="compareOverall"
           :score="overallCircle.score"
           :label="'Overall'"
           :color="overallCircle.color">
         </ScoreCircle>
         <ScoreCircle v-if="workloadCircle"
-          id="workload-circle" 
+          id="workload-circle"
+          @click="compareWorkload"
           :score="workloadCircle.score" 
           :label="'Workload'"
           :color="workloadCircle.color">
@@ -19,17 +21,17 @@
         <responseRow v-for="response in responseList" :response="response" :category="category" :key="response.label" />
       </div>
     </div>
-     <div class="right-column">
+    <div class="right-column">
        <div class="title">Q Breakdown</div>
       <selector :selectedOption="`${report.term} ${report.year}`" :options="options" :align="'right'" :handler="reportChanged"></selector>
       <!-- <div id="faculty-column">
         <faculty-row v-for="prof in info.profs" :prof="prof" :key="prof.matchName"></faculty-row>
       </div>  -->
     </div> 
-    <!-- <div id="percentile-graph">
-      <div v-for="bar in info.bars" class="bar" :style="bar"></div>
+    <div id="percentile-graph">
+      <div v-for="bar in bars" class="bar" :style="bar"></div>
     </div>
-    <div v-if="info.compare" id="percentile-label">
+<!--     <div v-if="info.compare" id="percentile-label">
       {{ info.compare.text.beforeUnderline }}
       <div class="percentile">{{ info.compare.text.percentile }}%
         <div :style="{'background-color': info.compare.underlineColor}" class="underline"></div>
@@ -56,13 +58,24 @@ import ScoreCircle from '../ScoreCircle.vue'
 import responseRow from './ResponseRow.vue'
 import facultyRow from './FacultyRow.vue'
 import selector from '@/components/Selector.vue'
-import { scoreCircle } from '@/parse/common'
+import { scoreCircle, colorForPercentile } from '@/parse/common'
 import { parseResponses, parseOptions } from '@/parse/report'
+import Bars from '../../../oldparse/bars.js'
 
 export default {
   components: { ScoreCircle, responseRow, facultyRow, selector },
   props: ['report', 'offering'],
   computed: {
+    bars () {
+      var compareArea = this.$store.state.course.compareArea
+      var compareCategory = this.$store.state.course.compareCategory
+      let response = this.report.responses[compareArea]
+      var percentile = response.percentiles[compareCategory]
+      var color = colorForPercentile(percentile)
+      var score = response.score
+      var size = this.report.size
+      return Bars(compareArea, compareCategory, color, score, size)
+    },
     category () {
       return this.$route.query.category || 'size'
     },
@@ -100,6 +113,12 @@ export default {
   // },
   // watch: { '$route': 'fetchData' },
   methods: {
+    compareOverall () {
+      this.$store.commit('setCompareArea', 'overall')
+    },
+    compareWorkload () {
+      this.$store.commit('setCompareArea', 'workload')
+    },
     fetchData () {
       // this.$store.dispatch('fetchPercentiles')
     },
