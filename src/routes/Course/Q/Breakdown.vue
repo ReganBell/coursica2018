@@ -166,15 +166,25 @@ export default {
     },
     workloadCircle () {
       try {
-        var circle = scoreCircle(this.responses.workload, true)
-        console.log(circle)
-        return circle
+        return scoreCircle(this.responses.workload, true)
       } catch (_) {
         return null
       }
     },
     options () {
-      return parseOptions(this.offering, this.report)
+      var options = parseOptions(this.offering, this.report)
+      const selectedId = this.$route.query.report
+
+      for(let option of options) {
+        console.log(option)
+        if(option.option === selectedId) {
+          option.selected = true
+        }
+      }
+
+      console.log('options', options)
+
+      return options
     },
     selectedOption () {
       return this.report.term + ' ' + this.report.year.replace('20', "'")
