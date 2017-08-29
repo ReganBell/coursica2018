@@ -12,10 +12,10 @@ const sizeClass = size => {
   return '1-5'
 }
 
-const parseCategory = category => {
+const parseCategory = (category, size) => {
   switch (category) {
     case 'size':
-      return sizeClass(category)
+      return sizeClass(size)
     case 'all':
       return '10-19'
     default:
@@ -23,7 +23,7 @@ const parseCategory = category => {
   }
 }
 export default (compareArea, compareCategory, color, score, size) => {
-  const category = parseCategory(compareCategory)
+  const category = parseCategory(compareCategory, size)
   const dist = distParams[compareArea][category]
   if (!dist) {
     return null
