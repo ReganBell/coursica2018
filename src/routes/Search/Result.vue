@@ -5,8 +5,7 @@
      <div class="info-subtitle">
       <span class="group-and-number">{{ info.groupAndNumber }}</span>
       <span class="term">{{ info.termYear }}</span>
-      <span v-if="info.meets" class="meets">{{ info.meets }}</span>
-      <span v-if="time" class="time">{{ time }}</span>
+      <span v-if="info.days" class="meets">{{ info.days }} {{ time }}</span>
       <span v-if="prof" class="prof">{{ prof.name }}</span>
       <span v-if="prof" class="profScore" v-bind:style="{ color: prof.color }">{{ prof.score }}</span>
     </div>
