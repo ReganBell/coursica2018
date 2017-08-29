@@ -31,24 +31,25 @@
     <div id="percentile-graph">
       <div v-for="bar in bars" class="bar" :style="bar"></div>
     </div>
-<!--     <div v-if="info.compare" id="percentile-label">
-      {{ info.compare.text.beforeUnderline }}
-      <div class="percentile">{{ info.compare.text.percentile }}%
-        <div :style="{'background-color': info.compare.underlineColor}" class="underline"></div>
+    <div id="percentile-label">
+      {{ beforeUnderlineText }}
+      <div class="percentile">
+        {{ percentileText }}%
+        <div :style="{'background-color': underlineColor}" class="underline"></div>
       </div>
-      {{ info.compare.text.afterUnderline }}
+      {{ afterUnderlineText }}
       <select class="hidden" @input="compareCategoryChanged">
-        <option v-for="option in info.compare.options" 
-          :value="option.option" 
-          :key="option.option" 
+        <option v-for="option in compareCategoryOptions" 
+          :value="option.value" 
+          :key="option.value" 
           :selected="option.selected">{{ option.text }}
         </option>
       </select>
-      <div class="select-label">
+<!--       <div class="select-label">
         {{ info.compare.selectedOption }} 
         <img src="../../../assets/select_arrow_blue.png" class="select-arrow"></img>
-      </div>
-    </div> -->
+      </div> -->
+    </div>
   </div>
 </template>
 
@@ -59,13 +60,50 @@ import responseRow from './ResponseRow.vue'
 import facultyRow from './FacultyRow.vue'
 import selector from '@/components/Selector.vue'
 import { scoreCircle, colorForPercentile } from '@/parse/common'
-import { parseResponses, parseOptions } from '@/parse/report'
+import { parseResponses, parseOptions, parseCompareCategoryOptions } from '@/parse/report'
 import Bars from '../../../oldparse/bars.js'
+
+function capitalizeFirstLetter(string) {
+    return string.charAt(0).toUpperCase() + string.slice(1);
+}
 
 export default {
   components: { ScoreCircle, responseRow, facultyRow, selector },
   props: ['report', 'offering'],
   computed: {
+    beforeUnderlineText() {
+      var compareArea = this.$store.state.course.compareArea
+      return compareArea === 'overall' ? "Voted better overall" : capitalizeFirstLetter(compareArea) + " rated better than"
+    },
+    percentileText() {
+      var compareArea = this.$store.state.course.compareArea
+      var compareCategory = this.$store.state.course.compareCategory
+      let response = this.report.responses[compareArea]
+      return response.percentiles[compareCategory]
+    },
+    underlineColor() {
+      var compareArea = this.$store.state.course.compareArea
+      var compareCategory = this.$store.state.course.compareCategory
+      let response = this.report.responses[compareArea]
+      let percentile = response.percentiles[compareCategory]
+      var color = colorForPercentile(percentile)
+      return color
+    },
+    afterUnderlineText() {
+      var compareCategory = this.$store.state.course.compareCategory
+      if(compareCategory === 'size') {
+        return 'of courses with'
+      } else if(compareCategory === 'all') {
+        return 'of all courses'
+      } else {
+        return 'of courses in'
+      }
+    },
+    compareCategoryOptions() {
+      var compareArea = this.$store.state.course.compareArea
+      console.log(parseCompareCategoryOptions(this.report, compareArea))
+      return parseCompareCategoryOptions(this.report, compareArea)
+    },
     bars () {
       var compareArea = this.$store.state.course.compareArea
       var compareCategory = this.$store.state.course.compareCategory

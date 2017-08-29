@@ -54,12 +54,12 @@ export default {
       }
       const { topReport, reports } = offering
       if (state.selectedReportId && reports) {
-        const selected = reports.filter(report => report.reportId === state.selectedReportId)[0]
+        const selected = reports.filter(report => report.reportId === state.selectedReportId)
         if (!selected) {
           console.log('Could not find report matching the selected reportId', state.selectedReportId, 'in', reports)
           return topReport
         }
-        return selected
+        return selected[0]
       }
       return topReport
     }
