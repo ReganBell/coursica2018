@@ -17,15 +17,21 @@ export const parseTime = (timeNum: number) => {
   return minutesNum > 1 ? [hoursNum, minutesNum].map(x => x.toFixed(0)).join(':') : hoursNum.toFixed(0)
 }
 
-export const scoreCircle = (response: Coursica.Response) => {
-  let score, percentile, color = null
+export const scoreCircle = (response: Coursica.Response, workload: boolean = false) => {
+  let score, percentile, color, maxScore = null
   try {
     score = parseScore(response.score)
-    percentile = response.percentiles.size
+    if(workload) {
+      percentile = 100 - response.percentiles.size
+      maxScore = 16.5
+    } else {
+      percentile = response.percentiles.size
+      maxScore = 5.0
+    }
     color = colorForPercentile(percentile)
   } catch (error) {}
   if (percentile) {
-    return { score, percentile, color }
+    return { score, percentile, color, maxScore }
   } else {
     return { score }
   }

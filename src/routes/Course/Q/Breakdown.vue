@@ -14,7 +14,8 @@
           @click="compareWorkload"
           :score="workloadCircle.score" 
           :label="'Workload'"
-          :color="workloadCircle.color">
+          :color="workloadCircle.color"
+          :maxScore="workloadCircle.maxScore">
         </ScoreCircle>
       </div>
       <div id="response-column">
@@ -94,13 +95,29 @@ export default {
       return this.response.percentiles
     },
     beforeUnderlineText() {
-      return this.attribute === 'overall' ? "Voted better overall" : capitalizeFirstLetter(this.attribute) + " rated better than"
+      switch(this.attribute) {
+        case 'overall': return 'Voted better overall'
+        case 'workload': return 'Workload rated higher than'
+        default: return capitalizeFirstLetter(this.attribute) + " rated better than"
+      }
     },
     percentileText() {
       return this.percentiles[this.category]
     },
     underlineColor() {
-      return this.percentiles ? colorForPercentile(this.percentiles[this.category]) : 'white'
+      if(this.percentiles) {
+        var percentile = this.percentiles[this.category]
+        if(percentile) {
+          if(this.attribute === 'workload') {
+            percentile = 100 - percentile
+          }
+          return colorForPercentile(percentile)
+        } else {
+          return 'white'
+        }
+      } else {
+        return 'white'
+      }
     },
     afterUnderlineText() {
       switch (this.category) {
@@ -149,7 +166,9 @@ export default {
     },
     workloadCircle () {
       try {
-        return scoreCircle(this.responses.workload)
+        var circle = scoreCircle(this.responses.workload, true)
+        console.log(circle)
+        return circle
       } catch (_) {
         return null
       }
