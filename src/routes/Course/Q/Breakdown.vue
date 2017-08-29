@@ -28,7 +28,7 @@
         <faculty-row v-for="prof in profs" :prof="prof" :key="prof.matchName"></faculty-row>
       </div>  
     </div> 
-    <div id="percentile-graph">
+    <div id="percentile-graph" v-if="percentiles && responses">
       <div v-for="bar in bars" class="bar" :style="bar"></div>
     </div>
     <div id="percentile-label" v-if="response && percentiles">
@@ -71,7 +71,7 @@ export default {
   components: { ScoreCircle, responseRow, facultyRow, selector },
   props: ['report', 'offering'],
   computed: {
-    category () {
+    category () { 
       return this.$store.state.course.compareCategory || 'size'
     },
     selectedCategoryText () {
@@ -80,8 +80,15 @@ export default {
     attribute () {
       return this.$store.state.course.compareArea || 'overall'
     },
+    responses () {
+      const prof = this.$store.state.course.selectedProf
+      if (prof) {
+        return this.report.profs[prof.matchName].responses
+      }
+      return this.report.responses
+    },
     response () {
-      return this.report.responses[this.attribute]
+      return this.responses[this.attribute]
     },
     percentiles () {
       return this.response.percentiles
@@ -90,10 +97,10 @@ export default {
       return this.attribute === 'overall' ? "Voted better overall" : capitalizeFirstLetter(this.attribute) + " rated better than"
     },
     percentileText() {
-      return this.response.percentiles[this.category]
+      return this.percentiles[this.category]
     },
     underlineColor() {
-      return colorForPercentile(this.percentiles[this.category])
+      return this.percentiles ? colorForPercentile(this.percentiles[this.category]) : 'white'
     },
     afterUnderlineText() {
       switch (this.category) {
@@ -107,7 +114,10 @@ export default {
     },
     categoryNames () {
       try {
-        return Object.keys(this.report.responses['overall'].percentiles)
+        if (this.responses.overall) {
+          return Object.keys(this.responses.overall.percentiles)
+        }
+        return Object.keys(this.responses.instructor.percentiles)
       } catch (_) {
         return []
       }
@@ -169,8 +179,11 @@ export default {
       // this.$store.dispatch('fetchPercentiles')
     },
     reportChanged (event) {
-      this.$store.dispatch('setSelectedReportId', event.target.value)
-      // this.fetchData()
+      this.$router.push({ 
+        query: {
+          report: event.target.value
+        }
+      })
     },
     compareCategoryChanged (event) {
       this.$store.commit('setCompareCategory', event.target.value)

@@ -4,7 +4,7 @@
     <div id="course-scroll-container">
       <div class="course-flex-container">
         <info v-if="offering" :offering="offering" />
-        <breakdown v-if="report" :offering="offering" :report="report" />
+        <breakdown v-if="offering && report" :offering="offering" :report="report" />
         <div class="empty-breakdown" v-else>No Q data available.</div>
         <!-- <comments v-if="commentInfo" :info="commentInfo"></comments> -->
       </div>
@@ -24,12 +24,20 @@ export default {
   components: { NavHeader, info, breakdown, comments },
   computed: {
     offering () { 
-      console.log('Selected offering:', this.$store.getters.selectedOffering)
-      return this.$store.getters.selectedOffering
+      return this.$store.state.course.offering
     },
     report () { 
-      console.log('Selected report:', this.$store.getters.selectedReport)
-      return this.$store.getters.selectedReport
+      const { topReport, reports } = this.offering
+      const selectedId = this.$route.query.report
+      if (selectedId) {
+        const selected = [topReport, ...reports].filter(report => report.reportId === selectedId)
+        if (!selected) {
+          console.log('Could not find report matching the selected reportId', selectedId, 'in', reports)
+          return topReport
+        }
+        return selected[0]
+      }
+      return topReport
     },
     commentInfo () { return this.$store.state.course.commentInfo }
   }

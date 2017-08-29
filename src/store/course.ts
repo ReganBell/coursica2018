@@ -19,11 +19,10 @@ export default {
     comments: load('comments') || {},
     commentsReportId: load('commentsReportId') || '',
     commentInfo: load('commentInfo') || {},
-    selectedReportId: load('selectedReportId') || '',
     percentiles: {},
     compareCategory: 'size',
     compareArea: 'overall',
-    compareProf: null,
+    selectedProf: '',
     percentilePath: '',
     distParams: {}
   },
@@ -43,25 +42,6 @@ export default {
       //   commit('setComments', {})
       //   dispatch('fetchComments')
       // }
-    }
-  },
-  getters: {
-    selectedOffering: state => state.offering,
-    selectedReport: state => {
-      const offering = state.offering as Coursica.Offering
-      if (!offering) {
-        return null
-      }
-      const { topReport, reports } = offering
-      if (state.selectedReportId && reports) {
-        const selected = reports.filter(report => report.reportId === state.selectedReportId)
-        if (!selected) {
-          console.log('Could not find report matching the selected reportId', state.selectedReportId, 'in', reports)
-          return topReport
-        }
-        return selected[0]
-      }
-      return topReport
     }
   },
   mutations: {
