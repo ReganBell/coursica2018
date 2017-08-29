@@ -32,32 +32,34 @@ export const parseOptions = (offering: Coursica.Offering, selectedReport: Coursi
   }))
 }
 
-export const parseCompareCategoryOptions = (report: Coursica.Report, compareArea: string) => {
-  let response = report.responses[compareArea]
-  console.log(response.percentiles)
-  let categories = Object.keys(response.percentiles)
-  var options = []
-  for (var category in categories) {
-    console.log(category)
-    if (category === 'all') {
-      options.push({value: 'all', text: 'all courses', selected: false})
-    } else if(category === 'size') {
-      var text = sizeClass(report.size) + " students"
-      options.push({value: 'size', text: text, selected: true})
-    } else {
-      options.push({value: category, text: category, selected: false})
+export const categoryDisplay = (category: string, report: Coursica.Report) => {
+  switch (category) {
+      case 'all':
+        return 'all courses'
+      case 'size':
+        return `${sizeClass(report.size)} students`
+      default:
+        return category
     }
-  }
-  return options
 }
 
-// export const parseProfs = (report: Coursica.Report) => {
-//   if (!report.profs) {
-//     return null
-//   }
-//   return report.profs.map(prof => {
-//     try {
-//       const overall = prof.responses.overall.
-//     }
-//   })
-// }
+export const parseProfs = (report: Coursica.Report) => {
+  if (!report.profs) {
+    return null
+  }
+  return report.profs.map(prof => {
+    const { displayName, matchName } = prof
+    try {
+      const score = prof.responses.instructor.score
+      try {
+        const percentile = prof.responses.instructor.percentiles.size
+        const color = colorForPercentile(percentile)
+        return { displayName, matchName, score, percentile, color }
+      } catch (_) {
+         return { displayName, matchName, score } 
+      }
+    } catch (_) {
+       return { displayName, matchName }
+    }
+  })
+}

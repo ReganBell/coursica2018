@@ -12,9 +12,23 @@ const sizeClass = size => {
   return '1-5'
 }
 
+const parseCategory = category => {
+  switch (category) {
+    case 'size':
+      return sizeClass(category)
+    case 'all':
+      return '10-19'
+    default:
+      return category
+  }
+}
 export default (compareArea, compareCategory, color, score, size) => {
-  const barsCategory = compareCategory === 'similar' ? 'size' : compareCategory
-  let {a, b, loc, scale} = distParams[compareArea][barsCategory === 'size' ? sizeClass(size) : barsCategory]
+  const category = parseCategory(compareCategory)
+  const dist = distParams[compareArea][category]
+  if (!dist) {
+    return null
+  }
+  let { a, b, loc, scale } = dist
   a = parseFloat(a)
   b = parseFloat(b)
   loc = parseFloat(loc)
@@ -46,7 +60,8 @@ export default (compareArea, compareCategory, color, score, size) => {
   const randAdjusted = heights.map(h => h * randAdjustment(0.15))
   const sum = randAdjusted.reduce((acc, val) => acc + val, 0.0)
   const final = randAdjusted.map(h => h * (2430.0 / sum))
-  return final.map((height, i) => ({ height: height.toFixed(1) + '%', 'background-color': i === colorIndex ? color : '#F5F5F5' }))
+  const bars = final.map((height, i) => ({ height: height.toFixed(1) + '%', 'background-color': i === colorIndex ? color : '#F5F5F5' }))
+  return bars
 }
 
 // to-do: smooth distribution by calculating mean, kurtosis, etc. then getting function to approximate distribution with

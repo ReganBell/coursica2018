@@ -23,15 +23,15 @@
     </div>
     <div class="right-column">
        <div class="title">Q Breakdown</div>
-      <selector :selectedOption="`${report.term} ${report.year}`" :options="options" :align="'right'" :handler="reportChanged"></selector>
-      <!-- <div id="faculty-column">
-        <faculty-row v-for="prof in info.profs" :prof="prof" :key="prof.matchName"></faculty-row>
-      </div>  -->
+      <selector :selectedOption="selectedOption" :options="options" :align="'right'" :handler="reportChanged"></selector>
+       <div id="faculty-column">
+        <faculty-row v-for="prof in profs" :prof="prof" :key="prof.matchName"></faculty-row>
+      </div>  
     </div> 
     <div id="percentile-graph">
       <div v-for="bar in bars" class="bar" :style="bar"></div>
     </div>
-    <div id="percentile-label">
+    <div id="percentile-label" v-if="response && percentiles">
       {{ beforeUnderlineText }}
       <div class="percentile">
         {{ percentileText }}%
@@ -45,10 +45,10 @@
           :selected="option.selected">{{ option.text }}
         </option>
       </select>
-<!--       <div class="select-label">
-        {{ info.compare.selectedOption }} 
+       <div class="select-label">
+        {{ selectedCategoryText }} 
         <img src="../../../assets/select_arrow_blue.png" class="select-arrow"></img>
-      </div> -->
+      </div> 
     </div>
   </div>
 </template>
@@ -60,8 +60,8 @@ import responseRow from './ResponseRow.vue'
 import facultyRow from './FacultyRow.vue'
 import selector from '@/components/Selector.vue'
 import { scoreCircle, colorForPercentile } from '@/parse/common'
-import { parseResponses, parseOptions, parseCompareCategoryOptions } from '@/parse/report'
-import Bars from '../../../oldparse/bars.js'
+import { parseResponses, parseOptions, categoryDisplay, parseProfs } from '@/parse/report'
+import parseBars from '../../../oldparse/bars.js'
 
 function capitalizeFirstLetter(string) {
     return string.charAt(0).toUpperCase() + string.slice(1);
@@ -71,54 +71,56 @@ export default {
   components: { ScoreCircle, responseRow, facultyRow, selector },
   props: ['report', 'offering'],
   computed: {
+    category () {
+      return this.$store.state.course.compareCategory || 'size'
+    },
+    selectedCategoryText () {
+      return categoryDisplay(this.category, this.report)
+    },
+    attribute () {
+      return this.$store.state.course.compareArea || 'overall'
+    },
+    response () {
+      return this.report.responses[this.attribute]
+    },
+    percentiles () {
+      return this.response.percentiles
+    },
     beforeUnderlineText() {
-      var compareArea = this.$store.state.course.compareArea
-      return compareArea === 'overall' ? "Voted better overall" : capitalizeFirstLetter(compareArea) + " rated better than"
+      return this.attribute === 'overall' ? "Voted better overall" : capitalizeFirstLetter(this.attribute) + " rated better than"
     },
     percentileText() {
-      var compareArea = this.$store.state.course.compareArea
-      var compareCategory = this.$store.state.course.compareCategory
-      let response = this.report.responses[compareArea]
-      return response.percentiles[compareCategory]
+      return this.response.percentiles[this.category]
     },
     underlineColor() {
-      var compareArea = this.$store.state.course.compareArea
-      var compareCategory = this.$store.state.course.compareCategory
-      let response = this.report.responses[compareArea]
-      let percentile = response.percentiles[compareCategory]
-      var color = colorForPercentile(percentile)
-      return color
+      return colorForPercentile(this.percentiles[this.category])
     },
     afterUnderlineText() {
-      var compareCategory = this.$store.state.course.compareCategory
-      if(compareCategory === 'size') {
-        return 'of courses with'
-      } else if(compareCategory === 'all') {
-        return 'of all courses'
-      } else {
-        return 'of courses in'
+      switch (this.category) {
+        case 'size':
+          return 'of courses with'
+        case 'all':
+          return 'of all courses'
+        default:
+          return 'of courses in'
+      }
+    },
+    categoryNames () {
+      try {
+        return Object.keys(this.report.responses['overall'].percentiles)
+      } catch (_) {
+        return []
       }
     },
     compareCategoryOptions() {
-      var compareArea = this.$store.state.course.compareArea
-      console.log(parseCompareCategoryOptions(this.report, compareArea))
-      return parseCompareCategoryOptions(this.report, compareArea)
+      const report = this.report
+      return this.categoryNames.map(value => ({ value, text: categoryDisplay(value, report), selected: value === this.category }))
     },
     bars () {
-      var compareArea = this.$store.state.course.compareArea
-      var compareCategory = this.$store.state.course.compareCategory
-      let response = this.report.responses[compareArea]
-      var percentile = response.percentiles[compareCategory]
-      var color = colorForPercentile(percentile)
-      var score = response.score
-      var size = this.report.size
-      return Bars(compareArea, compareCategory, color, score, size)
-    },
-    category () {
-      return this.$route.query.category || 'size'
-    },
-    area () {
-      return this.$route.query.area || 'overall'
+      const color = this.underlineColor
+      const score = this.response.score
+      const size = this.report.size
+      return parseBars(this.attribute, this.category, color, score, size)
     },
     responses () {
       return this.report.responses
@@ -144,6 +146,12 @@ export default {
     },
     options () {
       return parseOptions(this.offering, this.report)
+    },
+    selectedOption () {
+      return this.report.term + ' ' + this.report.year.replace('20', "'")
+    },
+    profs () {
+      return parseProfs(this.report)
     }
   },
   // created () {
