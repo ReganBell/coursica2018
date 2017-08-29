@@ -69,7 +69,7 @@ export default {
     right 1%
     height header-height
     width 504px
-    justify-content space-between
+    justify-content flex-end
     align-items center
     
     a

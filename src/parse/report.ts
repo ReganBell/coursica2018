@@ -50,3 +50,14 @@ export const parseCompareCategoryOptions = (report: Coursica.Report, compareArea
   }
   return options
 }
+
+// export const parseProfs = (report: Coursica.Report) => {
+//   if (!report.profs) {
+//     return null
+//   }
+//   return report.profs.map(prof => {
+//     try {
+//       const overall = prof.responses.overall.
+//     }
+//   })
+// }

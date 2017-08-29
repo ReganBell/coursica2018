@@ -10,7 +10,9 @@ import { sync } from 'vuex-router-sync'
 import InstantSearch from 'vue-instantsearch'
 import 'vue-nouislider/dist/vue-nouislider.css'
 import VueNoUISlider from 'vue-nouislider/dist/vue-nouislider.common'
+import VueObserveVisibility from 'vue-observe-visibility/dist/vue-observe-visibility'
 
+Vue.use(VueObserveVisibility)
 Vue.use(VueNoUISlider)
 Vue.use(InstantSearch)
 

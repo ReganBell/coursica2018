@@ -12,7 +12,6 @@
 
 import { mapState } from 'vuex'
 import { mixin as focusMixin } from 'vue-focus'
-import searchFilter from './Filter.vue'
 import searchBox from './SearchBox'
 
 const colors = ['red', 'orangered', 'orange', 'yellow', 'green', 'cyan']
@@ -21,7 +20,7 @@ export default {
   props: ['searchStore'],
   mixins: [focusMixin],
   data: () => ({ colors }),
-  components: { searchFilter, searchBox },
+  components: { searchBox },
   computed: mapState({
     searchText: state => state.search.text,
     results: state => state.search.results
