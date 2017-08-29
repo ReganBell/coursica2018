@@ -29,7 +29,7 @@ export default {
     handleSelect (result) {
       const q = this.searchStore.query
       this.$router.push({
-        query: { q }
+        query: { q, ...this.$route.query }
       })
       this.$store.dispatch('selectOffering', result)
       this.$router.push({ path: '/course/' + result.objectID })

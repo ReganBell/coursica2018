@@ -21,7 +21,7 @@ export default {
     expanded: true,
     tempValues: [1, 5]
   }),
-  props: ['name', 'display', 'values', 'range'],
+  props: ['name', 'display', 'values', 'range', 'query'],
   methods: {
     handleClick () {
       this.expanded = !this.expanded
@@ -30,7 +30,7 @@ export default {
       this.tempValues = newValues
     },
     handleEndDrag () {
-      this.$emit('updateSlider', this.name, this.tempValues)
+      this.$emit('updateSlider', this.name, this.tempValues, this.query, this.range)
     }
   },
   computed: {
@@ -38,11 +38,16 @@ export default {
   },
   mounted () {
     this.slider = document.getElementById(this.id)
-    this.tempValues = this.range
+    const [queryFrom, queryTo] = ['-from', '-to'].map(suffix => this.$route.query[this.query + suffix])
+    this.tempValues = this.values
+    if (queryFrom && queryTo) {
+      this.tempValues = [queryFrom, queryTo].map(strValue => parseFloat(strValue))
+      this.$emit('updateSlider', this.name, this.tempValues, this.query, this.range)
+    }
     const options = { 
       connect: true,
       range: this.range,
-      start: this.values,
+      start: this.tempValues,
       tooltips: true,
       format: {
         to: value => parseFloat(value).toFixed(1),

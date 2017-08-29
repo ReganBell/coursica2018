@@ -25,15 +25,23 @@ export default {
     expanded: true,
     showingMore: false
   }),
-  props: ['name', 'display', 'attributeName', 'searchStore', 'threshold'],
+  props: ['name', 'display', 'attributeName', 'query', 'searchStore', 'threshold'],
   components: { facetItem },
   created () {
     this.searchStore.addFacet(this.attributeName, this.operator)
+    const query = this.$route.query[this.queryKey]
+    if (query) {
+      const facets = query.split('_')
+      facets.forEach(facet => this.searchStore.toggleFacetRefinement(this.attributeName, facet))
+    }
   },
   destroyed () {
     this.searchStore.removeFacet(this.attributeName)
   },
   computed: {
+    queryKey () {
+      return this.query || this.attributeName
+    },
     facetValues() {
       return this.searchStore.getFacetValues(
         this.attributeName,
@@ -46,14 +54,38 @@ export default {
     },
     canShowMore () {
       return this.facetValues.length > this.threshold
+    },
+    queryFacets () {
+      const query = this.$route.query[this.queryKey]
+      if (query) {
+        return query.split('_')
+      } else {
+        return []
+      }
     }
   },
   methods: {
+    setFacets (facets) {
+      const queries = JSON.parse(JSON.stringify(this.$route.query))
+      if (facets.length === 0) {
+        delete queries[this.queryKey]
+      } else {
+        queries[this.queryKey] = facets.join('_')
+      }
+      this.$router.push({ query: queries })
+    },
     toggleRefinement(value) {
-      return this.searchStore.toggleFacetRefinement(
+      this.searchStore.toggleFacetRefinement(
         this.attributeName,
         value.name
       )
+      let facets = this.queryFacets
+      if (value.isRefined) {
+        facets.push(value.name)
+      } else {
+        facets = facets.filter(facet => facet !== value.name)
+      }
+      this.setFacets(facets)
     },
     toggleShowMore () {
       this.showingMore = !this.showingMore

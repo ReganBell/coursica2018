@@ -21,11 +21,13 @@
             :display="filter.display"
             :threshold="filter.threshold"
             :key="filter.name"
+            :query="filter.query"
             :searchStore="searchStore"
           />
           <searchSlider v-else
             @updateSlider="handleSliderUpdate"
             :name="filter.name"
+            :query="filter.query"
             :values="filter.values"
             :display="filter.display"
             :range="filter.range"
@@ -40,18 +42,18 @@
 <script>
 
 const rangeValues = (min, max) => ({ range: { min, max }, values: [min, max] })
-const filters = [
-  { name: 'termYear', display: 'Term', threshold: 2 },
-  { name: 'level', display: 'Level', threshold: 5 },
-  { display: 'Overall', name: 'topReport.responses.overall.score', ...rangeValues(2, 5) },
-  { display: 'Workload', name: 'topReport.responses.workload.score' , ...rangeValues(1, 17) },
-  { display: 'Size', name: 'topReport.size', ...rangeValues(1, 700) },
-  { name: 'primaryReason', display: 'Taken For', threshold: 3 },
-  { name: 'genEds', display: 'Gen Eds', threshold: 3},
-  { name: 'sessionString', display: 'Meets On', threshold: 5 },
-  { display: 'Percentile', name: 'topReport.responses.overall.percentiles.size', ...rangeValues(1, 100) },
-  { name: 'departments', display: 'Department', threshold: 5 },
-  { name: 'format', display: 'Format', threshold: 3 },
+const filterTemplates = [
+  { display: 'Term', name: 'termYear', threshold: 2 },
+  { display: 'Level', name: 'level', threshold: 5 },
+  { display: 'Overall', query: 'q', name: 'topReport.responses.overall.score', ...rangeValues(2, 5) },
+  { display: 'Workload', query: 'workload', name: 'topReport.responses.workload.score' , ...rangeValues(1, 17) },
+  { display: 'Size', query: 'size', name: 'topReport.size', ...rangeValues(1, 700) },
+  { display: 'Taken For', query: 'takenFor', name: 'primaryReason', threshold: 3 },
+  { display: 'Gen Eds', name: 'genEds', threshold: 3},
+  { display: 'Meets On', query: 'days', name: 'sessionString', threshold: 5 },
+  { display: 'Percentile', query: 'percentile', name: 'topReport.responses.overall.percentiles.size', ...rangeValues(1, 100) },
+  { display: 'Department', name: 'departments', threshold: 5 },
+  { display: 'Format', name: 'format', threshold: 3 },
 ]
 
 
@@ -63,26 +65,38 @@ import tableHeader from './TableHeader'
 export default {
   name: 'search-results',
   props: ['searchStore'],
-  data: () => ({ filters, page: 1 }),
+  data: () => ({ page: 1 }),
   components: { result, filterList, searchSlider, tableHeader },
   computed: {
     canLoadMore () {
       return this.searchStore.page === this.searchStore.totalPages
+    },
+    filters () {
+      return filterTemplates.map(template => {
+        return template
+      })
     }
   },
   methods: {
     handleSelect (result) {
       this.$emit('selectResult', result)
     },
-    handleSliderUpdate (name, newValues) {
+    handleSliderUpdate (name, newValues, query, range) {
       const [from, to] = newValues.map(value => Number(value))
+      const queryUpdate = {
+        [`${query}-from`]: from,
+        [`${query}-to`]: to
+      }
+      const queries = this.$route.query
+      this.$router.push({
+        query: { ...queryUpdate, ...queries}
+      })
       this.searchStore.stop()
       this.searchStore.clearRefinements(name)
       this.searchStore.addNumericRefinement(name, '>=', from)
       this.searchStore.addNumericRefinement(name, '<=', to)
       this.searchStore.start()
       this.searchStore.refresh()
-      console.log('activeRefinements', this.searchStore.activeRefinements, this.searchStore)
     },
     loadMore (visible) {
       if (visible) {
