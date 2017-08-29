@@ -4,7 +4,7 @@
       <div class="titles-column">
         <div class="group-and-number">{{ info.groupAndNumber }}</div>
         <div class="title">{{ info.title }}</div>
-        <div @click="removeFromShopping" class="shopping-button" v-if="firebaseLoaded && inShoppingList">Remove from to shopping list</div>
+        <div @click="removeFromShopping" class="shopping-button" v-if="firebaseLoaded && inShoppingList">Remove from shopping list</div>
         <div @click="addToShopping" class="shopping-button" v-else-if="firebaseLoaded">Add to shopping list</div>
       </div>
       <div class="circle-column">
