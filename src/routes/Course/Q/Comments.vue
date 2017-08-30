@@ -1,19 +1,20 @@
 <template>
-  <div id="q-comments" v-if="info">
+  <div id="q-comments">
     <div id="q-sidebar">
       <div class="title">Q Comments</div>
-      <selector 
-        :selectedOption="info.selectedOption" 
-        :options="info.options" 
-        :align="'left'"
-        :handler="reportChanged"></selector>
+      <selector :selectedOption="selectedOption" :options="options" :align="'left'" :handler="reportChanged"></selector>
       <div class="filters">
-        <div class="filter" v-for="filter in filters">{{ filter.name }}</div>
+        <div class="filter" v-for="filter in filters"
+          :key="filter.name"
+          @click="handleFilterChange">
+            {{ filter.name }}</div>
       </div>
     </div>
     <div id="comment-column">
-      <div class="comments" v-if="info.comments">
-        <div class="comment-container" v-for="comment in comments"><div class="comment">{{ comment.text }}</div></div>
+      <div class="comments" v-if="comments">
+        <div class="comment-container" v-for="comment in commentItems" :key="comment.key">
+          <div class="comment" :class="selectedFilter !== 'All' ? 'filtered' : ''" v-html="comment.text" />
+        </div>
       </div>
     </div>
   </div>
@@ -23,28 +24,45 @@
 
 import $ from 'jQuery'
 import Selector from '@/components/Selector.vue'
+import { parseOptions } from '@/parse/report'
+import { mapComments } from '@/parse/comments'
 
 export default {
   name: 'q-comments',
   components: { Selector },
-  props: ['info'],
+  props: ['offering', 'report'],
+  data: () => ({
+    filters: ['All', 'Lecture', 'Section', 'Work', 'Exam', 'Reading', 'TF'].map(name => ({ name })),
+    selectedFilter: 'All'
+  }),
   computed: {
-    filters: () => ['All', 'Lecture', 'Section', 'Work', 'Exam', 'Reading', 'TF'].map(f => ({name: f})),
     comments () {
-      const capitalize = string => string.charAt(0).toUpperCase() + string.slice(1)
-      return Object.values(this.info.comments).map(c => ({text: capitalize(c.text), helpful: c.helpful || 0}))
-    }
+      return this.$store.state.course.comments
+    },
+    commentItems () {
+      const mapped = mapComments(this.comments, this.selectedFilter)
+      return Object.keys(mapped).map(key => { 
+        const { text } = mapped[key]
+        return { text, key }
+      })
+    },
+    options () {
+      return parseOptions(this.offering, this.report)
+    },
+    selectedOption () {
+      return this.report.term + ' ' + this.report.year.replace('20', "'")
+    },
   },
-  created () {
-    this.fetchData()
-  },
-  watch: { '$route': 'fetchData' },
   methods: {
-    fetchData () {
-      this.$store.dispatch('fetchComments')
+    handleFilterChange (event) {
+      this.selectedFilter = event.target.innerText
     },
     reportChanged (event) {
-      this.$store.dispatch('setSelectedReportId', event.target.value)
+      this.$router.push({ 
+        query: {
+          report: event.target.value
+        }
+      })
     },
     limitTop () {
       return this.scrollTarget.offset().top > 85
@@ -112,6 +130,8 @@ export default {
           width 100%          
           border-bottom solid 1px #E8E8E8
           
+          .comment.filtered
+            color #999
           .comment
             padding-left 25px
             padding-right 15px
@@ -120,6 +140,11 @@ export default {
             font-family Source Sans Pro
             font-size 14px
             color black
+
+            .mention
+              color black
+              .match
+                font-weight 600
 
                  
     #q-sidebar

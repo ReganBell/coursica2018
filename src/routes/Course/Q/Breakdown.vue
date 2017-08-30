@@ -172,19 +172,7 @@ export default {
       }
     },
     options () {
-      var options = parseOptions(this.offering, this.report)
-      const selectedId = this.$route.query.report
-
-      for(let option of options) {
-        console.log(option)
-        if(option.option === selectedId) {
-          option.selected = true
-        }
-      }
-
-      console.log('options', options)
-
-      return options
+      return parseOptions(this.offering, this.report)
     },
     selectedOption () {
       return this.report.term + ' ' + this.report.year.replace('20', "'")

@@ -27,11 +27,14 @@ export default {
     distParams: {}
   },
   actions: {
-    fetchComments: ({ state, commit }) => {
-      commit('setCommentsReportId', state.selectedReportId)
-      Fetch.comments(state.selectedReportId || '100', (comments, err) => {
-        commit('setComments', comments)
-      })
+    fetchComments: ({ state, commit }, reportId) => {
+      if (reportId) {
+        Fetch.comments(reportId, (comments, err) => {
+          if (comments) {
+            commit('setComments', comments)
+          }
+        })
+      }
     },
     setSelectedReportId ({commit, dispatch, state}, reportId) {
       // commit('setSelectedReportId', reportId)
@@ -58,12 +61,7 @@ export default {
       persist({ offering })
     },
     setComments (state, comments, reportId) {
-      let {offering, selectedReportId} = state
-      comments = comments || {}
       state.comments = comments
-      // const commentInfo = Parse.commentInfo(offering, selectedReportId, comments)
-      // Vue.set(state, 'commentInfo', commentInfo)
-      // persist({ commentInfo })
     },
     setSelectedReportId (state, selectedReportId) {
       state.selectedReportId = selectedReportId

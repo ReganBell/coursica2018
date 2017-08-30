@@ -6,7 +6,7 @@
         <info v-if="offering" :offering="offering" />
         <breakdown v-if="offering && report" :offering="offering" :report="report" />
         <div class="empty-breakdown" v-else>No Q data available.</div>
-        <!-- <comments v-if="commentInfo" :info="commentInfo"></comments> -->
+        <comments v-if="offering && report" :offering="offering" :report="report"></comments> 
       </div>
     </div>
   </div>
@@ -29,17 +29,21 @@ export default {
     report () { 
       const { topReport, reports } = this.offering
       const selectedId = this.$route.query.report
+      let report = null
       if (selectedId) {
         const selected = [topReport, ...reports].filter(report => report.reportId === selectedId)
         if (!selected) {
           console.log('Could not find report matching the selected reportId', selectedId, 'in', reports)
-          return topReport
+          report = topReport
+        } else {
+          report = selected[0]
         }
-        return selected[0]
+      } else {
+        report = topReport
       }
-      return topReport
-    },
-    commentInfo () { return this.$store.state.course.commentInfo }
+      this.$store.dispatch('fetchComments', report.reportId)
+      return report
+    }
   }
 }
 

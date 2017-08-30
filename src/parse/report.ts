@@ -28,7 +28,8 @@ export const parseOptions = (offering: Coursica.Offering, selectedReport: Coursi
   const reports = [offering.topReport, ...(offering.reports || [])]
   return reports.map(report => ({
     text: `${report.term} ${report.year.replace('20', "'")}`, 
-    option: report.reportId
+    option: report.reportId,
+    selected: report.reportId === selectedReport.reportId
   }))
 }
 
