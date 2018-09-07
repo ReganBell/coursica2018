@@ -48,7 +48,7 @@ export default {
 
 @import '../../styles/base.styl'
 .bottom-half
-  overflow auto
+  overflow scroll
 
 .shopping-list-container
   width search-results-width

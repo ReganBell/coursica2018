@@ -3,6 +3,7 @@ import Router from 'vue-router'
 import HomeContainer from '@/routes/Home/HomeContainer'
 import SearchContainer from '@/routes/Search/SearchContainer'
 import CourseContainer from '@/routes/Course/CourseContainer'
+import ContactContainer from '@/routes/Home/Contact'
 
 Vue.use(Router)
 
@@ -24,6 +25,11 @@ export default new Router({
       path: '/course/:objectID',
       name: 'Course',
       component: CourseContainer
+    },
+    {
+      path: '/contact',
+      name: 'Contact',
+      component: ContactContainer
     },
     {
       path: '/',

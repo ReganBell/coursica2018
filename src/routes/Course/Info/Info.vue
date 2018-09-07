@@ -45,8 +45,13 @@
         <div class="bullet">
           <img src="../../../assets/bullet.png" class="point"></img><div class="info" v-html="bullet"></div>
         </div>
+      </template>
+      <template v-if="moreInfoShowing" v-for="bullet in moreInfoBullets">
+        <div class="bullet">
+          <img src="../../../assets/bullet.png" class="point"></img><div class="info" v-html="bullet"></div>
+        </div>
       </template> 
-      <div class="more-info-btn">More details...</div>
+      <div class="more-info-btn" @click="toggleMoreInfo">{{ (moreInfoShowing ? 'Fewer': 'More') + ' details...' }}</div>
     </div>
   </div>
 </template>
@@ -57,20 +62,17 @@ import ScoreCircle from '../ScoreCircle.vue'
 import Selector from '../../../components/Selector.vue'
 import Auth from '@/api/auth'
 import { basicInfo, profsInfo, overallInfo, workloadInfo, sizeInfo, timeInfo, sessionInfo, overallCircle, siblingInfo } from '@/parse/offering'
-import { bulletInfo } from '@/parse/bullets'
-
-var data = {
-  firebaseLoaded: false,
-  inShoppingList: true
-}
+import { bulletInfo, moreInfoBullets } from '@/parse/bullets'
 
 export default {
   name: 'course-info',
   props: ['offering'],
   components: { ScoreCircle, Selector },
-  data: function () {
-    return data
-  },
+  data: () => ({
+    firebaseLoaded: false,
+    inShoppingList: true,
+    moreInfoShowing: false
+  }),
   computed: {
     info () {
       return basicInfo(this.offering)
@@ -92,22 +94,29 @@ export default {
     },
     bullets () {
       return bulletInfo(this.offering)
+    },
+    moreInfoBullets () {
+      return moreInfoBullets(this.offering)
     }
   },
   methods: {
     addToShopping: function () {
       Auth.addToShoopingList(this.offering.objectID)
-      data.inShoppingList = true
+      this.inShoppingList = true
     },
     removeFromShopping: function () {
       Auth.removeFromShoppingList(this.offering.objectID)
-      data.inShoppingList = false
+      this.inShoppingList = false
+    },
+    toggleMoreInfo () {
+      this.moreInfoShowing = !this.moreInfoShowing
     }
   },
   mounted: function () {
+    const _this = this
     Auth.isInShoppingList(this.offering.objectID).then(function (inShoppingList) {
-      data.firebaseLoaded = true
-      data.inShoppingList = inShoppingList
+      _this.firebaseLoaded = true
+      _this.inShoppingList = inShoppingList
     })
 
     // if (this.objectID) {

@@ -90,11 +90,16 @@ const genEdsBullet = (genEds: string[]) => {
 }
 
 // TODO: Add course highlighting
-const prepBullet = (prep: string) => `Prepare with ${prep}.`
+const prepBullet = (prep: string) => `Prepare with: ${prep}.`
+
+const siteBullet = (site: string) => `<a href="${site}">View course website</a>`
 
 export const bulletInfo = (offering: Coursica.Offering) => {
   const bullets: string[] = []
   const sessions = offering.sessions
+  if (offering.courseSite) {
+    bullets.push(siteBullet(offering.courseSite))
+  }
   if (sessions) {
     bullets.push(...sessionBullets(sessions))
   }
@@ -111,5 +116,26 @@ export const bulletInfo = (offering: Coursica.Offering) => {
   if (offering.recommendedPrep) {
     bullets.push(prepBullet(offering.recommendedPrep))
   }
+  return bullets
+}
+
+export const moreInfoBullets = (offering: Coursica.Offering) => {
+  const bullets: string[] = []
+  if (offering.consentRequired) {
+    bullets.push('Instructor consent required: ' + offering.consentRequired)
+  }
+  if (offering.enrollmentCap) {
+    bullets.push('Enrollment capped at ' + offering.enrollmentCap)
+  }
+  if (offering.crossReg) {
+    bullets.push(offering.crossReg.join(', '))
+  }
+  if (offering.notes) {
+    bullets.push('Notes: ' + offering.notes)
+  }
+  if (offering.classNumber) {
+    bullets.push('Class number: ' + offering.classNumber)
+  } 
+  bullets.push('Course ID: ' + offering.courseId)
   return bullets
 }

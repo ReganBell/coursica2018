@@ -1,0 +1,16 @@
+- format / Ind Study => Independent Study
+- shorten level
+- combine sessions.days?
+- combine term
+- not offered
+- genEds
+- enrollmentReasons as a list (facet-able)
+
+- feedback has no percentiles
+- workload score circle wraps around
+- hist-lit (groups / departments with no q reports)
+
+- hide / show filters
+- guard against exceptions
+- more info on course page
+- sort search results

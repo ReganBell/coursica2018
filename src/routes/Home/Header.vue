@@ -3,8 +3,8 @@
     <header v-if="signedIn" class="header">
     <div class="links">
       <!-- <router-link to="/planner">Planner</router-link>
-      <router-link to="/calendar">Calendar</router-link>
-      <router-link to="/requirements">Requirements</router-link> -->
+      <router-link to="/calendar">Calendar</router-link> -->
+      <router-link to="/contact">Contact us</router-link>
       <span class="user-info">
         <div id="full-name">{{ fullName }}</div>
         <a id="sign-out" v-on:click="signOut">{{ signOutText }}</a>
@@ -66,8 +66,8 @@ export default {
       position fixed
       right 3%
       height header-height
-      width 504px
-      justify-content flex-end
+      width 200px
+      justify-content space-between
       align-items center
       
       a

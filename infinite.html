@@ -1,0 +1,123 @@
+<div id="app" class="container-fluid">
+    <ais-index id="main" 
+               app-id="latency" 
+               api-key="6be0576ff61c053d5f9a3225e2a90f76"
+               :query-parameters="{'page': page}"
+               >
+      <div class="row">
+        <div class="col-md-2 col-sm-3">
+          <h1 class="head-title">
+            Bootstrap
+          </h1>
+        </div>
+        <div class="col-md-10 col-sm-9">
+          <ais-search-box>
+            <div class="input-group">
+              <ais-input
+              placeholder="Search product by name or reference..."
+              :class-names="{
+                'ais-input': 'form-control'
+                }"
+              ></ais-input>
+
+              <span class="input-group-btn">
+                <ais-clear :class-names="{'ais-clear': 'btn btn-default'}">
+                  <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
+                </ais-clear>
+                <button class="btn btn-default" type="submit">
+                  <span class="glyphicon glyphicon-search" aria-hidden="true"></span>
+                </button>
+              </span>
+            </div><!-- /input-group -->
+
+          </ais-search-box>
+
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="col-md-2 col-sm-3">
+          <ais-tree-menu :attributes="['category', 'sub_category']" :class-names="{
+            'ais-tree-menu__list': 'list-unstyled',
+            'ais-tree-menu__count': 'badge'
+            }">
+            <h3 slot="header">Browse by</h3>
+          </ais-tree-menu>
+
+          <ais-price-range attribute-name="price" :class-names="{
+            'ais-price-range__input': 'form-control'
+            }">
+            <h3 slot="header">Price</h3>
+          </ais-price-range>
+
+
+          <ais-refinement-list attribute-name="materials" :class-names="{
+            'ais-refinement-list__count': 'badge',
+            'ais-refinement-list__item': 'checkbox'
+            }">
+            <h3 slot="header">Material</h3>
+          </ais-refinement-list>
+
+          <ais-refinement-list attribute-name="colors" :class-names="{
+            'ais-refinement-list__count': 'badge',
+            'ais-refinement-list__item': 'checkbox'
+            }">
+            <h3 slot="header">Color</h3>
+          </ais-refinement-list>
+
+          <ais-rating attribute-name="rating" :class-names="{
+            'ais-rating__count': 'badge'
+            }">
+            <h3 slot="header">Rating</h3>
+          </ais-rating>
+
+        </div>
+        <div class="col-md-10 col-sm-9">
+          <div class="search-controls form-inline">
+            <ais-sort-by-selector :indices="[
+                {name: 'ikea', label: 'Relevance'},
+                {name: 'ikea_price_asc', label: 'Lowest price'},
+                {name: 'ikea_price_desc', label: 'Highest price'}
+                ]"
+                :class-names="{'ais-sort-by-selector': 'form-control' }"
+            ></ais-sort-by-selector>
+
+            <ais-results-per-page-selector :options="[12, 24, 48]" :class-names="{'ais-results-per-page-selector': 'form-control' }"></ais-results-per-page-selector>
+
+            <ais-powered-by></ais-powered-by>
+
+            <ais-stats></ais-stats>
+          </div>
+
+          <ais-results :stack="true">
+            <template scope="{ result }">
+              <div class="search-result">
+                <img class="result__image img-responsive" :src="result.image">
+
+                <div class="result__info">
+                  <h2 class="result__name">
+                    <ais-highlight :result="result" attribute-name="name"></ais-highlight>
+                  </h2>
+                  <div class="result__type">
+                    <ais-highlight :result="result" attribute-name="type"></ais-highlight>
+                  </div>
+                  <div class="result__rating">
+                    <template v-for="n in 5">
+                      <span v-if="n <= result.rating" class="result__star"></span>
+                      <span v-else class="result__star--empty"></span>
+                    </template>
+                  </div>
+                  <div class="result__price">${{result.price}}</div>
+                </div>
+              </div>
+            </template>
+          </ais-results>
+
+          <ais-no-results></ais-no-results>
+          
+          <div v-observe-visibility="loadMore">Loading more...</div>
+        </div>
+      </div>
+    </ais-index>
+
+  </div>

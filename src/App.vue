@@ -2,6 +2,7 @@
   <div id="app">
     <router-view v-if="authReady"></router-view>
   </div>
+  
 </template>
 
 <script>
