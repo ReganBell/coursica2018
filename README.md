@@ -1,6 +1,5 @@
 # Coursica
 
-Should edit with Sublime Text, [Sublime Linter](http://sublimelinter.readthedocs.io/en/latest/installation.html), and [SublimeLinter-eslint](https://github.com/roadhump/SublimeLinter-eslint). Getting these to work may require installing some packages globally with `npm install -g packageName`. If you run `npm run lint` and it fails, it should tell you which packages you're missing.
 
 ## Build Setup
 
